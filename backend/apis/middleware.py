@@ -40,9 +40,10 @@ class ApiMiddleware:
 
         #add context to request
         if settings.DEBUG:
-            response.context_data['website'] = self.website
-            response.context_data['website']['response_time'] = timezone.now() - self.start_time
-        
+            if response.context_data is not None:
+                response.context_data['website'] = self.website
+                response.context_data['website']['response_time'] = timezone.now() - self.start_time
+                
         return response
     
 
@@ -87,8 +88,8 @@ class PortalMiddleware(object):
         namespace = None
 
         if 'HTTP_HOST' in request.META:
-            if 'OTO-LOCATION' in request.headers:
-                namespace = request.headers['OTO-LOCATION']
+            if 'OUR-LOCATION' in request.headers:
+                namespace = request.headers['OUR-LOCATION']
                 try:
                     location = Assignment.objects.get(namespace=namespace)
                 except Assignment.DoesNotExist:

@@ -23,7 +23,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email=email, password=password, **extra_fields)
 
 class User(AbstractUser):
-    email=models.CharField(max_length=80, unique=True)
+    email=models.CharField(max_length=80, unique=True) #models.EmailField() maybe?
     username=models.CharField(max_length=45)
     date_of_birth=models.DateField(null=True)
     
@@ -32,3 +32,9 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['username']
     def __str__(self):
         return self.username
+    
+# class Profile(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_profile')
+#     #role = models.CharField() #Teacher /Student. teacher can be student on another course. this should be on the relationship
+
+    

@@ -28,7 +28,7 @@ class GUIDModel(models.Model):
     """
     guid = models.UUIDField(primary_key=True, max_length=40, default=uuid.uuid4)
     created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(default=now)
+    modified = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
         """

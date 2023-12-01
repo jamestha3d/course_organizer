@@ -27,7 +27,50 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# ALLOWED_HOSTS = (
+#     '192.168.1.70',
+#     'localhost',
+#     'localhost:8000',
+#     'localhost:5000',
+#     '.localapp.com',
+#     '.app.com',
+#     '.staging.com',
+# )
 
+
+# CORS_ORIGIN_REGEX_WHITELIST = [
+#     r"http://\w+\.\w+\.localapp\.com:8000$",
+#     r"http://\w+\.localapp\.com:8000$",
+#     r"http://<slug>.\w+\.localapp\.com:8000$",
+#     r"http://<slug>.localapp\.com:8000$",
+#     r"http://localhost:10001$",
+#     r"https://\w+\.app\.com$",
+#     r"https://\w+\.\w+\.app\.com$",
+#     r"https://\w+\.\w+\.appstaging\.com$",
+#     r"https://\w+\.appstaging\.com$",
+#     r"https://<slug>.\w+\.appstaging\.com$",
+#     r"https://<slug>.appstaging\.com$",
+#     r"https://localhost:10001$",
+#     r"https://\w+\.appstaging\.com$",
+#     r"https://\w+\.\w+\.appstaging\.com$",
+#     r"null",
+# ]
+
+# CORS_ALLOW_CREDENTIALS = True
+#from corsheaders.defaults import default_headers
+# CORS_ALLOW_HEADERS = default_headers + (
+#     'accept',
+#     'accept-encoding',
+#     'authorization',
+#     'content-type',
+#     'dnt',
+#     'origin',
+#     'user-agent',
+#     'Oto-Org',
+#     'Oto-Location',
+#     'x-csrftoken',
+#     'x-requested-with',
+# )
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,7 +84,8 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "apis",
-    "accounts"
+    "accounts",
+    "reversion",
 ]
 
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
