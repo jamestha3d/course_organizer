@@ -83,7 +83,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
-    "apis",
+    "apis.apps.BaseConfig", #using full app config path so signals import will work
     "accounts",
     "reversion",
 ]

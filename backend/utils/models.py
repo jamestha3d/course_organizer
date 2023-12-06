@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.timezone import now
 import uuid
-
+from model_utils import FieldTracker #pip install django-model-utils
 
 
 class BaseModel(models.Model):
@@ -65,3 +65,9 @@ class ExpandedBaseModel(BaseModel):
 
     class Meta:
         abstract = True
+
+    #FIeld Tracker
+    # class Post(models.Model):
+    #     title = models.CharField(max_length=255)
+    #     author = models.ForeignKey(Author)
+    #     tracker = FieldTracker()

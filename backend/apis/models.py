@@ -5,11 +5,12 @@ from django.contrib.auth import get_user_model
 # Create your models here.
 import reversion
 
-
 User = get_user_model()
+
 class Course(GUIDModel): #AKA classroom
     title = models.CharField(max_length=256)
     code = models.CharField(max_length=6, blank=True, null=True)
+    #students = models.ManyToManyField()
     
     
     @classmethod
@@ -22,6 +23,7 @@ class Course(GUIDModel): #AKA classroom
 class Assignment(GUIDModel):
     title = models.CharField(max_length=256)
     subject = models.ForeignKey('Subject', related_name='assignments', on_delete=models.CASCADE)
+    due = models.DateTimeField()
     
     def __str__(self) -> str:
         return f"{self.subject} Assignment: {self.title}"
@@ -35,6 +37,8 @@ class Subject(GUIDModel):
     def __str__(self) -> str:
         return f"{self.title} {self.code}"
 
+class Submission(GUIDModel):
+    pass
 class Discussion(GUIDModel):
     pass
 
@@ -72,3 +76,10 @@ class Comment(GUIDModel):
 class Profile(GUIDModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     #image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+
+
+class Student(GUIDModel):
+    pass
+
+class Teacher(GUIDModel):
+    pass
