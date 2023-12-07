@@ -15,4 +15,11 @@ class Account(BaseModel, AuditModelMixin, AbstractUser):
                                   default='', blank=True)
     last_name= models.CharField(max_length=64, default='', blank=True)
 
-    
+
+class ModelVersionMixin:
+    user = models.CharField()
+    comment = models.CharField()
+    version = models.CharField()
+
+    def pre_save():
+        pass
