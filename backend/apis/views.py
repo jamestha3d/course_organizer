@@ -8,7 +8,9 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from reversion.models import Version
 from django.db.models import F
-from .models import Course, Assignment, Subject
+from .models import Course, Assignment, Classroom, User, Profile, Post, PostComment
+from rest_framework import status, viewsets
+from .serializers import ClassroomSerializer, CourseSerializer, ProfileSerializer, PostSerializer, PostCommentSerializer, AssignmentSerializer
 # Create your views here.
 
 def index(request:Request):
@@ -29,29 +31,97 @@ def homepage(request:Request):
 #     permission_classes = [IsAuthenticated]
 #     queryset = Model.objects.all()
 
-@api_view()
-def assignment_history(request:Request, assignment_id):
-    assignment = Assignment.objects.get(guid=assignment_id)
-    versions = Version.objects.get_for_object(assignment)
+# @api_view()
+# def assignment_history(request:Request, assignment_id):
+#     assignment = Assignment.objects.get(guid=assignment_id)
+#     versions = Version.objects.get_for_object(assignment)
 
-    data = versions.values('pk',
-                           'revision__date_created',
-                           'revision__user__username',
-                           'revision__comment',
-                           'pk')
+#     data = versions.values('pk',
+#                            'revision__date_created',
+#                            'revision__user__username',
+#                            'revision__comment',
+#                            'pk')
     
-    data = versions.values('pk',
-                        date_time=F('revision__date_created'),
-                        user=F('revision__user__username'),
-                        comment=F('revision__comment'))
+#     data = versions.values('pk',
+#                         date_time=F('revision__date_created'),
+#                         user=F('revision__user__username'),
+#                         comment=F('revision__comment'))
     
-    return Response({'data': data})
+#     return Response({'data': data})
 
 
-@api_view()
-def assignment_version(request, version_id):
-    v = Version.objects.get(id=version_id)
-    #Version.objects.get(id=15).revision.revert() to revert
-    #v._object_version.object to get the instance of the object as it were
+# @api_view()
+# def assignment_version(request, version_id):
+#     v = Version.objects.get(id=version_id)
+#     #Version.objects.get(id=15).revision.revert() to revert
+#     #v._object_version.object to get the instance of the object as it were
     
-    return Response({"data": v.field_dict})
+#     return Response({"data": v.field_dict})
+
+
+class AssignmentView(viewsets.ModelViewSet):
+    permission_classes = []
+    serializer_class = AssignmentSerializer
+    queryset = Assignment.objects.all()
+    filter_fields = '__all__'
+    lookup_field = 'guid'
+
+    def get_queryset(self):
+        queryset = self.queryset
+        return queryset
+
+
+class CourseView(viewsets.ModelViewSet):
+    permission_classes = []
+    serializer_class = CourseSerializer
+    queryset = Course.objects.all()
+    filter_fields = '__all__'
+    lookup_field = 'guid'
+
+    def get_queryset(self):
+        queryset = self.queryset
+        return queryset
+    
+
+class ClassroomView(viewsets.ModelViewSet):
+    permission_classes = []
+    serializer_class = ClassroomSerializer
+    queryset = Classroom.objects.all()
+    filter_fields = '__all__'
+    lookup_field = 'guid'
+
+    def get_queryset(self):
+        queryset = self.queryset
+        return queryset
+class ProfileView(viewsets.ModelViewSet):
+    permission_classes = []
+    serializer_class = ProfileSerializer
+    queryset = Profile.objects.all()
+    filter_fields = '__all__'
+    lookup_field = 'guid'
+
+    def get_queryset(self):
+        queryset = self.queryset
+        return queryset
+
+class PostView(viewsets.ModelViewSet):
+    permission_classes = []
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    filter_fields = '__all__'
+    lookup_field = 'guid'
+
+    def get_queryset(self):
+        queryset = self.queryset
+        return queryset
+    
+class PostCommentView(viewsets.ModelViewSet):
+    permission_classes = []
+    serializer_class = PostCommentSerializer
+    queryset = PostComment.objects.all()
+    filter_fields = '__all__'
+    lookup_field = 'guid'
+
+    def get_queryset(self):
+        queryset = self.queryset
+        return queryset

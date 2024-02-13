@@ -3,6 +3,14 @@ from django.utils.timezone import now
 import uuid
 
 
+#version mixin
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
+import json
+from django.utils.functional import cached_property
+from django.core.serializers.json import DjangoJSONEncoder
+import uuid
+from django.utils.timezone import now
 
 class BaseModel(models.Model):
     class Meta:

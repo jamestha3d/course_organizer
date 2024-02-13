@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course, Assignment, Subject 
+from .models import Course, Assignment, Classroom
 from reversion.admin import VersionAdmin
 # Register your models here.
 @admin.register(Course)
