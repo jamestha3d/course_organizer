@@ -2,6 +2,7 @@ from django.db import models
 from utils.models import GUIDModel
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+from autoslug import AutoSlugField #from django-autoslug
 # Create your models here.
 import reversion
 
@@ -11,7 +12,9 @@ from django.utils.timezone import now
 
 User = get_user_model()
 class Classroom(GUIDModel): #AKA classroom
-    title = models.CharField(max_length=256, unique=True)
+    #this is a classroom. an overall topic. e.g french.
+    title = models.CharField(max_length=256)
+    namespace = AutoSlugField(populate_from='title', null=True, editable=True, always_update=False)
     instructor = models.ForeignKey('Profile', on_delete=models.DO_NOTHING, null=True)
     description = models.TextField(null=True)
     
@@ -27,13 +30,13 @@ class Assignment(GUIDModel):
     course = models.ForeignKey('Course', related_name='assignments', on_delete=models.CASCADE)
     due_date = models.DateTimeField(default=now, null=True)
     description = models.TextField(null=True)
-    submissions = models.ManyToManyField('Submission', related_name='assignment')
+    #submissions = models.ManyToManyField('Submission', related_name='assignment')
     
     def __str__(self) -> str:
         return f"{self.Course} Assignment: {self.title}"
     
 class Submission(GUIDModel):
-    #assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE, related_name='submission')
+    assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE, related_name='submission', null=True)
     attachments = models.ManyToManyField('Post')
     title = models.CharField(max_length=256)
     body = models.TextField()
@@ -45,12 +48,15 @@ class Submission(GUIDModel):
             ('NOT GRADED', 'NOT GRADED'),
             )
     grade = models.CharField(max_length=10, choices=GRADES, default='NOT GRADED')
-    owner = models.ForeignKey('Profile', on_delete=models.DO_NOTHING)
+    student = models.ForeignKey('Profile', on_delete=models.DO_NOTHING, null=True)
+    
 
 class Course(GUIDModel):
+    #this is a particular course. e.g french101 - speaking
     title = models.CharField(max_length=256)
     classroom = models.ForeignKey(Classroom, related_name='assignments', on_delete=models.CASCADE)
     code = models.CharField(max_length=6, unique=True)
+    namespace = AutoSlugField(populate_from='title', null=True, editable=True, always_update=False)
     #students = models.ManyToManyField('Profile', related_name='Courses_registered', null=True)
     #instructors = models.ManyToManyField('Profile', related_name='Courses_teaching', null=True)
     description = models.TextField(null=True)
@@ -59,11 +65,15 @@ class Course(GUIDModel):
         return f"{self.title} {self.code}"
     
 class Session(GUIDModel):
-    course = models.ForeignKey('Course', on_delete=models.DO_NOTHING)
+    course = models.ForeignKey('Course', on_delete=models.SET_NULL, null=True)
     start_date = models.DateTimeField(default=now)
     end_date = models.DateTimeField(default=now)
-    students = models.ManyToManyField('Profile', related_name='Courses_registered')
+    students = models.ManyToManyField('Profile', related_name='Courses_registered', through='StudentSession', through_fields=('session','student'))
     instructors = models.ManyToManyField('Profile', related_name='Courses_teaching')
+
+class StudentSession(GUIDModel):
+    session = models.ForeignKey('Session', on_delete=models.SET_NULL, null=True)
+    student = models.ForeignKey('Profile', on_delete=models.SET_NULL, null=True)
 
 class Cohort(GUIDModel):
     #session is for one course, cohort is for multiple courses. 
@@ -117,6 +127,16 @@ class Profile(GUIDModel):
     )
     img = models.ImageField(null=True, blank=True, default='default.jpeg')
 
+    class Meta:
+        ordering = ['created']
+
+    def join_session(self, session: Session):
+        if not session:
+            return False
+        if self not in session.students:
+            session.students.add(self)
+        return True
+    
 class Lesson(GUIDModel):
     title = models.CharField(max_length=256)
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lessons')

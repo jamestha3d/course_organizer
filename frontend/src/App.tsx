@@ -1,25 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
+import { Col, Container, Row } from 'react-bootstrap';
 import './App.css';
+import Header from './components/Header';
+import Home from './components/Home';
+import LessonsList from './components/LessonsList';
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import Login from './components/Login';
+import Signup from './components/Signup';
+import { Footer } from './components/Footer';
+import { useState } from 'react';
+import useToken from './hooks/useToken';
 
 function App() {
+
+  const { token, setToken } = useToken();
+  //const token: string = getToken();
+
+  let user: boolean = true;
+  if (!token) {
+    //return <Login setToken={setToken} />
+    user = false;
+  }
+
+  //const { user } = useAuthContext()
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <BrowserRouter>
+        <Header />
+        <Routes>
+          <Route path='/' element={user ? <Home /> : <Navigate to="/login" />} //using Navigate to redirect
+          />
+          <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+          <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
+        </Routes>
+        <Footer />
+      </BrowserRouter>
+    </>
   );
 }
 

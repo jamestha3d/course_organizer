@@ -82,19 +82,20 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
-    "corsheaders",
+    "corsheaders", #1
     "apis",
     "accounts",
     "reversion",
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
+CORS_ALLOWED_ORIGINS = ['http://192.168.2.15:3000'] #'http://localhost:5173', #2
 
 AUTH_USER_MODEL = "accounts.User" #specify custom user model
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "apis.middleware.ApiMiddleware",
+    'corsheaders.middleware.CorsMiddleware', #3
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
