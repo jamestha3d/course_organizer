@@ -72,3 +72,22 @@ export const signUpUser = async (signup_details: Login_details) => {
         }
     }
 }
+
+export const getCourses = async () => {
+    try {
+        const data = await axios.get<any>(
+            `${endpoint}` + 'api/classrooms',
+        );
+        return data.data;
+
+    }
+    catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log("error message: ", error.message);
+            return error.message;
+        } else {
+            console.log("unexpected error: ", error);
+            return "An unexpected error has occured.";
+        }
+    }
+}

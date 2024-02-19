@@ -61,7 +61,7 @@ function SignUpPage() {
         if (Object.keys(validationErrors).length === 0) {
             //sign up
             //alert("Form success")
-            console.log('signing up', formData.email, formData.password)
+            // console.log('signing up', formData.email, formData.password)
             await signup(formData.email, formData.password)
 
 

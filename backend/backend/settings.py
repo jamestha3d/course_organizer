@@ -85,7 +85,6 @@ INSTALLED_APPS = [
     "corsheaders", #1
     "apis",
     "accounts",
-    "reversion",
 ]
 
 CORS_ALLOWED_ORIGINS = ['http://192.168.2.15:3000', 'http://localhost:3000'] #'http://localhost:5173', #2

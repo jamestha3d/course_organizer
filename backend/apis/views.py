@@ -56,9 +56,9 @@ class ClassroomView(viewsets.ModelViewSet):
     filter_fields = '__all__'
     lookup_field = 'guid'
 
-    def get_queryset(self):
-        queryset = self.queryset
-        return queryset
+    # def get_queryset(self):
+    #     queryset = self.queryset
+    #     return queryset
     
 class ProfileView(viewsets.ModelViewSet):
     permission_classes = []

@@ -1,27 +1,36 @@
 
-// const Home = () => {
-
+import { useEffect, useState } from "react";
+import { getCourses } from "../api";
 import Navbar from "./Navbar";
+import { UseAuthContext } from "../hooks/useAuthContext";
 
-//     return (
-//         <a href='google.com'> home was imported</a>
-//     )
-// }
-
-// export default Home
-//import { useNavigate } from 'react-router-dom'
 interface Props {
 }
 
 
+
 const Home = (props: Props) => {
-    //const { loggedIn, email } = 
-    //const navigate = useNavigate()
-    const email: string = '';
-    const loggedIn: boolean = false;
-    const onButtonClick = () => {
-        // You'll update this function later
+
+    const [courses, setCourses] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
+    const { user } = UseAuthContext()
+    const getcourses = async () => {
+        const courses: any = await getCourses()
+        setCourses(courses)
+        setIsLoading(false)
+
     }
+
+    useEffect(
+        () => {
+            if (user) {
+                getcourses()
+            }
+
+        }, [user]
+
+    )
+
 
     return (
         <>
@@ -33,6 +42,11 @@ const Home = (props: Props) => {
                         <div>Welcome!</div>
                     </div>
                     <div>This is the home page.</div>
+                    <h3> Courses</h3>
+                    <ul>
+                        {isLoading ? <> Courses Loading.. Please wait</> : <>{courses.map((course: any, index: number) => (<li> {course.title}</li>))}</>}
+
+                    </ul>
 
                 </div>
 

@@ -13,9 +13,6 @@ const Login: React.FunctionComponent<ILoginProps> = (props) => {
         email: "",
         password: "",
     });
-    const changeAuthMode = () => {
-        setAuthMode(authMode === "signin" ? "signup" : "signin")
-    }
 
     const { login, error, isLoading } = useLogin()
 
@@ -49,7 +46,7 @@ const Login: React.FunctionComponent<ILoginProps> = (props) => {
                         <h3 className="Auth-form-title">Sign In</h3>
                         <div className="text-center">
                             Not registered yet?{" "}
-                            <Link to="/signup" className="link-primary" onClick={changeAuthMode}>
+                            <Link to="/signup" className="link-primary" >
                                 Sign Up
                             </Link>
                         </div>
