@@ -9,19 +9,19 @@ import Signup from './components/Signup';
 import { Footer } from './components/Footer';
 import { useState } from 'react';
 import useToken from './hooks/useToken';
-
+import { UseAuthContext } from './hooks/useAuthContext';
 function App() {
 
   const { token, setToken } = useToken();
   //const token: string = getToken();
 
-  let user: boolean = true;
+  //let user: boolean = true;
   if (!token) {
     //return <Login setToken={setToken} />
-    user = false;
+    //user = false;
   }
 
-  //const { user } = useAuthContext()
+  const { user } = UseAuthContext()
 
   return (
     <>

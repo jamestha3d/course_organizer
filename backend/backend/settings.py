@@ -88,7 +88,7 @@ INSTALLED_APPS = [
     "reversion",
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://192.168.2.15:3000'] #'http://localhost:5173', #2
+CORS_ALLOWED_ORIGINS = ['http://192.168.2.15:3000', 'http://localhost:3000'] #'http://localhost:5173', #2
 
 AUTH_USER_MODEL = "accounts.User" #specify custom user model
 MIDDLEWARE = [
