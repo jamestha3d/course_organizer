@@ -14,7 +14,7 @@ const REGISTER_URL = '/register';
 
 function SignUpPage() {
 
-    let [authMode, setAuthMode] = useState("signup")
+    // let [authMode, setAuthMode] = useState("signup")
 
     const [formData, setFormData] = useState({
         email: '',
@@ -29,9 +29,9 @@ function SignUpPage() {
         })
     }
 
-    const changeAuthMode = () => {
-        setAuthMode(authMode === "signin" ? "signup" : "signin")
-    }
+    // const changeAuthMode = () => {
+    //     setAuthMode(authMode === "signin" ? "signup" : "signin")
+    // }
 
     const [errors, setErrors] = useState<any>({})
 
@@ -74,7 +74,7 @@ function SignUpPage() {
                     <h3 className="Auth-form-title">Sign Up</h3>
                     <div className="text-center">
                         Already registered?{" "}
-                        <Link to='/login' className="link-primary" onClick={changeAuthMode}>
+                        <Link to='/login' className="link-primary" >
                             Sign In
                         </Link>
                     </div>

@@ -11,7 +11,7 @@ interface Props {
 
 const Home = (props: Props) => {
 
-    const [courses, setCourses] = useState(null)
+    const [courses, setCourses] = useState<any>(null)
     const [isLoading, setIsLoading] = useState(true)
     const { user } = UseAuthContext()
     const getcourses = async () => {
@@ -44,7 +44,7 @@ const Home = (props: Props) => {
                     <div>This is the home page.</div>
                     <h3> Courses</h3>
                     <ul>
-                        {isLoading ? <> Courses Loading.. Please wait</> : <>{courses.map((course: any, index: number) => (<li> {course.title}</li>))}</>}
+                        {isLoading ? <> Courses Loading.. Please wait</> : <>{courses && courses.map((course: any, index: number) => (<li key={index}> {course.title}</li>))}</>}
 
                     </ul>
 

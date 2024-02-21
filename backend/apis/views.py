@@ -33,9 +33,9 @@ class AssignmentView(viewsets.ModelViewSet):
     filter_fields = '__all__'
     lookup_field = 'guid'
 
-    def get_queryset(self):
-        queryset = self.queryset
-        return queryset
+    # def get_queryset(self):
+    #     queryset = self.queryset
+    #     return queryset
 
 class CourseView(viewsets.ModelViewSet):
     permission_classes = []
@@ -44,9 +44,9 @@ class CourseView(viewsets.ModelViewSet):
     filter_fields = '__all__'
     lookup_field = 'guid'
 
-    def get_queryset(self):
-        queryset = self.queryset
-        return queryset
+    # def get_queryset(self):
+    #     queryset = self.queryset
+    #     return queryset
 
 
 class ClassroomView(viewsets.ModelViewSet):
@@ -67,9 +67,9 @@ class ProfileView(viewsets.ModelViewSet):
     filter_fields = '__all__'
     lookup_field = 'guid'
 
-    def get_queryset(self):
-        queryset = self.queryset
-        return queryset
+    # def get_queryset(self):
+    #     queryset = self.queryset
+    #     return queryset
 
 class PostView(viewsets.ModelViewSet):
     permission_classes = []
@@ -78,9 +78,9 @@ class PostView(viewsets.ModelViewSet):
     filter_fields = '__all__'
     lookup_field = 'guid'
 
-    def get_queryset(self):
-        queryset = self.queryset
-        return queryset
+    # def get_queryset(self):
+    #     queryset = self.queryset
+    #     return queryset
     
 class PostCommentView(viewsets.ModelViewSet):
     permission_classes = []
@@ -89,9 +89,9 @@ class PostCommentView(viewsets.ModelViewSet):
     filter_fields = '__all__'
     lookup_field = 'guid'
 
-    def get_queryset(self):
-        queryset = self.queryset
-        return queryset
+    # def get_queryset(self):
+    #     queryset = self.queryset
+    #     return queryset
     
 class LessonView(viewsets.ModelViewSet):
     permission_classes = []
@@ -100,6 +100,6 @@ class LessonView(viewsets.ModelViewSet):
     filter_fields = '__all__'
     lookup_field = 'guid'
 
-    def get_queryset(self):
-        queryset = self.queryset
-        return queryset
+    # def get_queryset(self):
+    #     queryset = self.queryset
+    #     return queryset

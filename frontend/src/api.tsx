@@ -76,9 +76,9 @@ export const signUpUser = async (signup_details: Login_details) => {
 export const getCourses = async () => {
     try {
         const data = await axios.get<any>(
-            `${endpoint}` + 'api/classrooms',
+            `${endpoint}` + 'api/classrooms?limit=3',
         );
-        return data.data;
+        return data.data.results;
 
     }
     catch (error) {
