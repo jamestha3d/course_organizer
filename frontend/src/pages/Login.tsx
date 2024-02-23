@@ -39,7 +39,7 @@ const Login: React.FunctionComponent<ILoginProps> = (props) => {
 
     };
     return (
-        <>
+        <div className="page">
             <div className="Auth-form-container">
                 <form className="Auth-form" onSubmit={handleLogin} method="post">
                     <div className="Auth-form-content">
@@ -84,7 +84,7 @@ const Login: React.FunctionComponent<ILoginProps> = (props) => {
                     </div>
                 </form>
             </div>
-        </>
+        </div>
     );
 };
 

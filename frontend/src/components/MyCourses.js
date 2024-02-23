@@ -5,7 +5,7 @@ import { UseAuthContext } from '../hooks/useAuthContext';
 import { getCourses } from '../api';
 
 function MyCourses() {
-    const [courses, setCourses] = useState(null)
+    const [courses, setCourses] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const { user } = UseAuthContext()
     const getcourses = async () => {

@@ -1,15 +1,21 @@
 import * as React from 'react';
 import { useState } from 'react';
+import { postNewCourse } from '../../api';
 
 interface IcreateCourseProps {
+  classroom: string
 }
 
-const createCourse: React.FunctionComponent<IcreateCourseProps> = (props) => {
+const CreateCourse: React.FunctionComponent<IcreateCourseProps> = ({ classroom }) => {
 
   const [formData, setFormData] = useState({
+    classroom: classroom,
     title: "",
-
+    code: "",
+    description: ""
   })
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (e: React.FormEvent) => {
     setFormData({
@@ -17,15 +23,37 @@ const createCourse: React.FunctionComponent<IcreateCourseProps> = (props) => {
       [e.target.name]: e.target.value
     })
   }
-  const createCourse = (e: React.FormEvent) => {
+  const submitCourse = (e: React.FormEvent) => {
     e.preventDefault();
-
+    setIsLoading(true)
   }
+
+  const post = postNewCourse(formData)
   return (
-    <form method={"POST"} onSumbit={createCourse}>
-      <input name="title" value={formData.title} onChange={handleChange}></input>
-    </form>
+    <div>
+      <form className="" method={"POST"} onSumbit={submitCourse}>
+        <div className="form-content">
+          <div className="form-group">
+            <label>Title</label>
+            <input type="text" name="title" value={formData.title} className="form-control mt-1" placeholder="Title" onChange={handleChange}></input>
+          </div>
+          <div className="form-group">
+            <label>code</label>
+            <input type="text" name="code" value={formData.code} className="form-control mt-1" onChange={handleChange} placeholder="Cource Code e.g ABC123" maxLength="6"></input>
+          </div>
+          <div className="form-group">
+            <label>Description</label>
+            <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Enter a description" className="form-control mt-1" rows={4} cols={40}></textarea>
+          </div>
+          <div className="d-grid gap-2 mt-3">
+            <button type="submit" className="btn btn-primary" disabled={isLoading} >
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
   );
 };
 
-export default createCourse;
+export default CreateCourse;

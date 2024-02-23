@@ -1,10 +1,12 @@
 import axios from "axios"
 import { Lesson } from "./models/lesson.model";
+import { UseAuthContext } from "./hooks/useAuthContext";
 
 const endpoint = process.env.REACT_APP_API_URL;
 const api = endpoint + 'api/';
 const login = endpoint + 'auth/login/'
 const signup = endpoint + 'auth/signup/'
+
 interface LessonsResponse {
     data: Lesson[]
 }
@@ -12,6 +14,63 @@ interface LessonsResponse {
 export interface Login_details {
     email: string,
     password: string
+}
+
+function getUser() {
+    return JSON.parse(localStorage.getItem('user'))
+}
+
+const getEndpoint = async (endpoint: string,) => {
+    const user = getUser()
+    try {
+        const data = await axios.get<any>(
+            `${endpoint}`,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + user.token.access
+                }
+            }
+        );
+
+        return data.data.results;
+
+    }
+    catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log("error message: ", error.message);
+            return [];
+        } else {
+            console.log("unexpected error: ", error);
+            return [];
+        }
+    }
+}
+
+const postEndpoint = async (endpoint: string, body: any) => {
+    const user = getUser()
+    try {
+        const data = await axios.post<any>(
+            `${endpoint}`,
+            body,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + user.token.access
+                }
+            }
+        );
+
+        return data.data.results;
+
+    }
+    catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log("error message: ", error.message);
+            return [];
+        } else {
+            console.log("unexpected error: ", error);
+            return [];
+        }
+    }
 }
 
 export const getLessons = async (query: string) => {
@@ -45,6 +104,8 @@ export const loginUser = async (login_details: Login_details) => {
     catch (error) {
         if (axios.isAxiosError(error)) {
             console.log("error message: ", error.message);
+            //toast error message
+            //release the submit button
             return error.message;
         } else {
             console.log("unexpected error: ", error);
@@ -84,10 +145,18 @@ export const getCourses = async () => {
     catch (error) {
         if (axios.isAxiosError(error)) {
             console.log("error message: ", error.message);
-            return error.message;
+            return [];
         } else {
             console.log("unexpected error: ", error);
-            return "An unexpected error has occured.";
+            return [];
         }
     }
+}
+
+export const getAssignments = async () => {
+    return await getEndpoint(api + 'assignments')
+}
+
+export const postNewCourse = async (data: any) => {
+    return await postEndpoint(api + 'course', data)
 }

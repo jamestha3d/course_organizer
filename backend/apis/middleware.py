@@ -29,7 +29,6 @@ class ApiMiddleware:
     def __call__(self, request):
         print('call to api')
         response = self.get_response(request)
-
         return response
     
     def process_view(self, request, view_func, view_args, view_kwargs):

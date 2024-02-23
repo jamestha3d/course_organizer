@@ -40,7 +40,9 @@ class LoginView(APIView):
             response={
                 "message": "Login Successful",
                 "token": tokens, #user.auth_token.key old token method,
-                "user": user.email
+                "user": {
+                    "email": user.email,
+                }
 
             }
             return Response(data=response, status=status.HTTP_200_OK)

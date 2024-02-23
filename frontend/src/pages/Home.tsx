@@ -1,8 +1,9 @@
 
 import { useEffect, useState } from "react";
 import { getCourses } from "../api";
-import Navbar from "./Navbar";
+import Navbar from "../components/Navbar";
 import { UseAuthContext } from "../hooks/useAuthContext";
+import TopNav from "../components/TopNav";
 
 interface Props {
 }
@@ -33,28 +34,31 @@ const Home = (props: Props) => {
 
 
     return (
-        <>
+        <div className="page">
             <Navbar />
-            <main className="container p-5">
+            <TopNav title="Home" />
+            {/* <h3> Home </h3> */}
+            <br /> <hr />
+            <div className="aaaa">
 
-                <div className="mainContainer">
-                    <div className={'titleContainer'}>
-                        <div>Welcome!</div>
+                <div className="aaa">
+                    <div className={"aaa"}>
+
                     </div>
                     <div>This is the home page.</div>
-                    <h3> Courses</h3>
-                    <ul>
+                    {/* <h3> Courses</h3> */}
+                    {/* <ul>
                         {isLoading ? <> Courses Loading.. Please wait</> : <>{courses && courses.map((course: any, index: number) => (<li key={index}> {course.title}</li>))}</>}
 
-                    </ul>
+                    </ul> */}
 
                 </div>
 
 
-            </main>
+            </div>
 
 
-        </>
+        </div>
     )
 }
 

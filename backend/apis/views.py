@@ -5,12 +5,14 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action, permission_classes
 from reversion.models import Version
 from django.db.models import F
 from .models import Course, Assignment, Classroom, Lesson, User, Profile, Post, PostComment
 from rest_framework import status, viewsets
 from .serializers import ClassroomSerializer, CourseSerializer, LessonSerializer, ProfileSerializer, PostSerializer, PostCommentSerializer, AssignmentSerializer
+from django.shortcuts import get_object_or_404
+
 # Create your views here.
 
 @api_view(['GET'])
@@ -36,7 +38,15 @@ class AssignmentView(viewsets.ModelViewSet):
     # def get_queryset(self):
     #     queryset = self.queryset
     #     return queryset
-
+    @action(
+        detail=False,
+        methods=['GET',],
+        permission_classes=[],
+        # url_path="tags/(?P<tagname>[^/.]+)",
+    )
+    def my_assignments(self, request):
+        print(request.user)
+        return Response(f'{request.user}')
 class CourseView(viewsets.ModelViewSet):
     permission_classes = []
     serializer_class = CourseSerializer

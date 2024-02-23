@@ -93,13 +93,13 @@ AUTH_USER_MODEL = "accounts.User" #specify custom user model
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "apis.middleware.ApiMiddleware",
     'corsheaders.middleware.CorsMiddleware', #3
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "apis.middleware.ApiMiddleware",
 ]
 
 ROOT_URLCONF = "backend.urls"

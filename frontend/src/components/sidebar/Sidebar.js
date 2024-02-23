@@ -23,7 +23,7 @@ const Sidebar = ({ children }) => {
         },
         {
             title: 'My Courses',
-            path: '/mycourses',
+            path: '/my_courses',
             icon: <FaIcons.FaCartPlus />,
             cName: 'nav-text'
         },
@@ -43,6 +43,12 @@ const Sidebar = ({ children }) => {
             title: 'Support',
             path: '/support',
             icon: <IoIcons.IoMdHelpCircle />,
+            cName: 'nav-text'
+        },
+        {
+            title: 'Create',
+            path: '/create',
+            icon: <FaIcons.FaPlus />,
             cName: 'nav-text'
         },
         {
@@ -70,7 +76,7 @@ const Sidebar = ({ children }) => {
                 </div>
                 {
                     menuItem.map((item, index) => (
-                        <NavLink to={item.path} key={index} className={("sidebar-link")} activeClassName="active">
+                        <NavLink to={item.path} key={index} className={("sidebar-link")} activeclassname="active">
                             <div className="icon">{item.icon}</div>
                             <div style={{ display: isOpen ? "block" : "none" }} className="link_text">{item.title}</div>
                         </NavLink>

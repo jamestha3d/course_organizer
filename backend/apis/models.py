@@ -14,7 +14,7 @@ User = get_user_model()
 class Classroom(GUIDModel): #AKA classroom
     #this is a classroom. an overall topic. e.g french.
     title = models.CharField(max_length=256)
-    namespace = AutoSlugField(populate_from='title', null=True, editable=True, always_update=False)
+    namespace = AutoSlugField(populate_from='title', blank=True, null=True, editable=True, always_update=False)
     instructor = models.ForeignKey('Profile', on_delete=models.DO_NOTHING, null=True)
     description = models.TextField(null=True)
     
@@ -24,16 +24,18 @@ class Classroom(GUIDModel): #AKA classroom
     def get_domain_from_request_host(cls, request_host):
         return [s for s in request_host.split('.') if s != 'www'][0] if request_host else None
     
+    def __str__(self):
+        return f'{self.title} - {self.description}'
 
 class Assignment(GUIDModel):
     title = models.CharField(max_length=256)
     course = models.ForeignKey('Course', related_name='assignments', on_delete=models.CASCADE)
-    due_date = models.DateTimeField(default=now, null=True)
+    due_date = models.DateTimeField(default=now, blank=True, null=True)
     description = models.TextField(null=True)
     #submissions = models.ManyToManyField('Submission', related_name='assignment')
     
     def __str__(self) -> str:
-        return f"{self.Course} Assignment: {self.title}"
+        return f"{self.course} Assignment: {self.title}"
     
 class Submission(GUIDModel):
     assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE, related_name='submission', null=True)
@@ -56,7 +58,7 @@ class Course(GUIDModel):
     title = models.CharField(max_length=256)
     classroom = models.ForeignKey(Classroom, related_name='assignments', on_delete=models.CASCADE)
     code = models.CharField(max_length=6, unique=True)
-    namespace = AutoSlugField(populate_from='title', null=True, editable=True, always_update=False)
+    namespace = AutoSlugField(populate_from='title', blank=True, null=True, editable=True, always_update=False)
     #students = models.ManyToManyField('Profile', related_name='Courses_registered', null=True)
     #instructors = models.ManyToManyField('Profile', related_name='Courses_teaching', null=True)
     description = models.TextField(null=True)
