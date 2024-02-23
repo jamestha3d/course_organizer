@@ -8,7 +8,7 @@ const Create: React.FunctionComponent<ICreateProps> = (props) => {
     return (
         <div className="page">
             <h3> Create</h3>
-            <CreateCourse />
+            <CreateCourse classroom="78b6dadf-9d8e-467d-b4e8-177a196c561d" />
         </div>
     );
 };

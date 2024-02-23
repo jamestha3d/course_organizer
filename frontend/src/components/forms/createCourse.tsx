@@ -1,20 +1,21 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { postNewCourse } from '../../api';
-
+import { Navigate, useNavigate } from 'react-router-dom';
 interface IcreateCourseProps {
   classroom: string
 }
 
 const CreateCourse: React.FunctionComponent<IcreateCourseProps> = ({ classroom }) => {
 
-  const [formData, setFormData] = useState({
+  const emptyForm = {
     classroom: classroom,
     title: "",
     code: "",
     description: ""
-  })
-
+  }
+  const [formData, setFormData] = useState(emptyForm)
+  const [submitted, setSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = (e: React.FormEvent) => {
@@ -23,15 +24,36 @@ const CreateCourse: React.FunctionComponent<IcreateCourseProps> = ({ classroom }
       [e.target.name]: e.target.value
     })
   }
-  const submitCourse = (e: React.FormEvent) => {
+
+
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    //toast success
+    if (submitted) {
+      return navigate("/my_courses");
+    }
+  }, [submitted]);
+
+  const submitCourse = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true)
+    const post = await postNewCourse(formData)
+    setIsLoading(false)
+    if (post.status === 201) {
+      //redirect to home page
+      setFormData(emptyForm)
+      setSubmitted(true)
+    }
+    else {
+      alert("Something went wrong")
+    }
+
   }
 
-  const post = postNewCourse(formData)
   return (
     <div>
-      <form className="" method={"POST"} onSumbit={submitCourse}>
+      <form className="" method={"POST"} onSubmit={submitCourse}>
         <div className="form-content">
           <div className="form-group">
             <label>Title</label>

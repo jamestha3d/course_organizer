@@ -59,7 +59,7 @@ const postEndpoint = async (endpoint: string, body: any) => {
             }
         );
 
-        return data.data.results;
+        return data;
 
     }
     catch (error) {
@@ -158,5 +158,5 @@ export const getAssignments = async () => {
 }
 
 export const postNewCourse = async (data: any) => {
-    return await postEndpoint(api + 'course', data)
+    return await postEndpoint(api + 'courses/', data)
 }
