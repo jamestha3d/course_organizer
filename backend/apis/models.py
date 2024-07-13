@@ -7,9 +7,9 @@ from autoslug import AutoSlugField #from django-autoslug
 import reversion
 
 #version mixin
-
+#from dateutil.relativedelta import relativedelta
 from django.utils.timezone import now
-
+from datetime import timedelta
 User = get_user_model()
 class Classroom(GUIDModel): #AKA classroom
     #this is a classroom. an overall topic. e.g french.
@@ -51,7 +51,7 @@ class Submission(GUIDModel):
             )
     grade = models.CharField(max_length=10, choices=GRADES, default='NOT GRADED')
     student = models.ForeignKey('Profile', on_delete=models.DO_NOTHING, null=True)
-    
+    #ensure submission can only be made by student for assignment that student is registered for.
 
 class Course(GUIDModel):
     #this is a particular course. e.g french101 - speaking
@@ -70,8 +70,8 @@ class Session(GUIDModel):
     course = models.ForeignKey('Course', on_delete=models.SET_NULL, null=True)
     start_date = models.DateTimeField(default=now)
     end_date = models.DateTimeField(default=now)
-    students = models.ManyToManyField('Profile', related_name='Courses_registered', through='StudentSession', through_fields=('session','student'))
-    instructors = models.ManyToManyField('Profile', related_name='Courses_teaching')
+    students = models.ManyToManyField('Profile', related_name='sessions_registered', through='StudentSession', through_fields=('session','student'))
+    instructors = models.ManyToManyField('Profile', related_name='sessions_teaching')
 
 class StudentSession(GUIDModel):
     session = models.ForeignKey('Session', on_delete=models.SET_NULL, null=True)
@@ -82,8 +82,8 @@ class Cohort(GUIDModel):
     #if students join a cohort, they will automatically be subscribed to every course in the cohort.
     courses = models.ManyToManyField('Course')
     start_date = models.DateTimeField(default=now)
-    students = models.ManyToManyField('Profile', related_name='Cohorts_registered')
-    instructors = models.ManyToManyField('Profile', related_name='Cohorts_teaching')
+    students = models.ManyToManyField('Profile', related_name='cohorts_registered')
+    instructors = models.ManyToManyField('Profile', related_name='cohorts_teaching')
 
 
 class Discussion(GUIDModel):
@@ -124,7 +124,7 @@ class Profile(GUIDModel):
         ('TEACHER', 'TEACHER')
         )
     #image = models.ImageField(default='default.jpg', upload_to='profile_pics')
-    roles = models.CharField(
+    role = models.CharField(
         max_length=255, default='STUDENT', choices=ROLES
     )
     img = models.ImageField(null=True, blank=True, default='default.jpeg')
@@ -138,6 +138,9 @@ class Profile(GUIDModel):
         if self not in session.students:
             session.students.add(self)
         return True
+    
+    def courses(self):
+        courses = Course.objects.filter()
     
 class Lesson(GUIDModel):
     title = models.CharField(max_length=256)

@@ -10,7 +10,7 @@ import { UseAuthContext } from './hooks/useAuthContext';
 import Dashboard from './pages/Dashboard';
 import Sidebar from './components/sidebar/Sidebar';
 import Create from './pages/Create';
-
+import PrivateRoute from './utils/PrivateRoute';
 
 function App() {
   const { token, setToken } = useToken();
@@ -21,12 +21,12 @@ function App() {
     //user = false;
   }
 
-  const { user } = UseAuthContext()
+  const user = UseAuthContext()
   // const user = JSON.parse(localStorage.getItem('user'))
 
   const NotFound = () => (
     <div className="page">
-      <span style={{ "textAlign": "center" }}>Oops, what you are looking for, does not exist.</span>
+      <span style={{ "textAlign": "center" }}>Oops, what you are looking for does not exist.</span>
     </div>
   );
 
@@ -34,8 +34,10 @@ function App() {
     <BrowserRouter>
       <Sidebar>
         <Routes>
+          {/* <PrivateRoute path="/dashboard2" element={user ? <Dashboard /> : <Navigate to="/login" />} /> */}
           <Route path='/' element={user ? <Home /> : <Navigate to="/login" />}
           />
+          {user.username} {user.email}
           <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
           <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
           <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />

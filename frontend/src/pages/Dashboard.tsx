@@ -1,5 +1,5 @@
 import * as React from 'react';
-import MyCourses from '../components/MyCourses';
+import Courses from '../components/Courses';
 import Subheader from '../components/Subheader';
 import Assignments from '../components/Assignments';
 
@@ -12,7 +12,7 @@ const Dashboard: React.FunctionComponent<IDashboardProps> = (props) => {
         <br /> <hr />
         <Subheader title="My Courses" subtext="These are the courses that you have registered for" />
 
-        <MyCourses />
+        <Courses />
         <br /> <hr />
         <Subheader title="Assignments" subtext="Here are your recent assignments" />
         <Assignments />

@@ -18,7 +18,7 @@ const CreateCourse: React.FunctionComponent<IcreateCourseProps> = ({ classroom }
   const [submitted, setSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleChange = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -31,7 +31,7 @@ const CreateCourse: React.FunctionComponent<IcreateCourseProps> = ({ classroom }
   useEffect(() => {
     //toast success
     if (submitted) {
-      return navigate("/my_courses");
+      return navigate("/dashboard");
     }
   }, [submitted]);
 

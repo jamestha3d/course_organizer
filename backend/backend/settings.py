@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     "corsheaders", #1
     "apis",
     "accounts",
+    "rest_framework_simplejwt.token_blacklist"
 ]
 
 CORS_ALLOWED_ORIGINS = ['http://192.168.2.15:3000', 'http://localhost:3000'] #'http://localhost:5173', #2
@@ -121,6 +122,8 @@ REST_FRAMEWORK = {
 SIMPLE_JWT= {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=99),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
     'SIGNING_KEY': SECRET_KEY,
     'AUTH_HEADER_TYPES': ('Bearer',),
     

@@ -3,7 +3,7 @@ import { UseAuthContext } from "./useAuthContext";
 
 export const useSignup = () => {
     const [error, setError] = useState(null)
-    const [isLoading, setIsLoading] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
     const { dispatch } = UseAuthContext()
     const api = process.env.REACT_APP_API_URL
     const signup = async (email, password) => {

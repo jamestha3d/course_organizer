@@ -7,6 +7,8 @@ from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from .tokens import create_jwt_pair_for_user
 # Create your views here.
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 class SignUpView(generics.GenericAPIView):
     serializer_class = SignUpSerializer
@@ -56,3 +58,18 @@ class LoginView(APIView):
         }
 
         return Response(data=content, status=status.HTTP_200_OK)
+    
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['name'] = user.name
+        token['email'] = user.email
+        # ...
+
+        return token
+    
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer

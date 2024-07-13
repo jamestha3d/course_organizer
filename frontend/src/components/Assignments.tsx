@@ -4,17 +4,22 @@ import { useEffect, useState } from 'react';
 import { UseAuthContext } from '../hooks/useAuthContext';
 
 
-
+interface IAssignment {
+    id: number;
+    title: string;
+    description: string;
+}
 interface IAssignmentsProps {
+    assignments: IAssignment[];
 }
 
 const Assignments: React.FunctionComponent<IAssignmentsProps> = (props) => {
 
     const user = UseAuthContext()
     const [loading, setLoading] = useState(true)
-    const [assignments, setAssignments] = useState([])
+    const [assignments, setAssignments] = useState<IAssignment[]>([])
     const fetchAssignments = async () => {
-        const data = await getAssignments()
+        const data: IAssignment[] = await getAssignments()
         console.log(data)
         setAssignments(data)
         setLoading(false)
