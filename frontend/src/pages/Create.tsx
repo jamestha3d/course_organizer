@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import CreateCourse from '../components/forms/CreateCourse';
+import CreateCourse from '../components/forms/createCourse';
 interface ICreateProps {
 }
 
