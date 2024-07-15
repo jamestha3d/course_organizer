@@ -8,7 +8,8 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from 'react-bootstrap/Button';
-import * as FaIcons from "react-icons/fa"
+import * as FaIcons from "react-icons/fa";
+import SignOutButton from "../components/buttons/SignOutButton";
 //example from SideBar
 
 const Layout = ({ children }) => {
@@ -28,10 +29,6 @@ const Layout = ({ children }) => {
             navbarScroll
           >
             <Nav.Link href="/dashboard">Dashboard</Nav.Link>
-            {/* <NavLink to="dashboard" className={("sidebar-link")} activeclassname="active"> Dashboard</NavLink>
-            <Nav className="mr-auto">
-                <NavLink to="/dashboard" className={("sidebar-link")} activeclassname="active"> Dashboard</NavLink>
-            </Nav> */}
             <Nav.Link href="/assignments">Assignments</Nav.Link>
             <NavDropdown title="Courses" id="navbarScrollingDropdown">
               <NavDropdown.Item href="/courses">My courses</NavDropdown.Item>
@@ -67,11 +64,10 @@ const Layout = ({ children }) => {
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href="#action5">
-                Sign Out
+                <SignOutButton />
               </NavDropdown.Item>
             </NavDropdown>
 
-            {/* <NavLink to="dashboard" className={("sidebar-link")} activeclassname="active"></NavLink> */}
         </Navbar.Collapse>
       </Container>
     </Navbar>

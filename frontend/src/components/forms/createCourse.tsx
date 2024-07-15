@@ -18,7 +18,7 @@ const CreateCourse: React.FunctionComponent<IcreateCourseProps> = ({ classroom }
   const [submitted, setSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleChange = (e: React.FormEvent) => {
+  const handleChange:any = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -38,7 +38,7 @@ const CreateCourse: React.FunctionComponent<IcreateCourseProps> = ({ classroom }
   const submitCourse = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true)
-    const post = await postNewCourse(formData)
+    const post:any = await postNewCourse(formData)
     setIsLoading(false)
     if (post.status === 201) {
       //redirect to home page
@@ -61,7 +61,7 @@ const CreateCourse: React.FunctionComponent<IcreateCourseProps> = ({ classroom }
           </div>
           <div className="form-group">
             <label>code</label>
-            <input type="text" name="code" value={formData.code} className="form-control mt-1" onChange={handleChange} placeholder="Cource Code e.g ABC123" maxLength="6"></input>
+            <input type="text" name="code" value={formData.code} className="form-control mt-1" onChange={handleChange} placeholder="Cource Code e.g ABC123" maxLength={6}></input>
           </div>
           <div className="form-group">
             <label>Description</label>

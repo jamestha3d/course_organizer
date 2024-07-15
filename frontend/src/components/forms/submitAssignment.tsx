@@ -4,7 +4,7 @@ interface IsubmitAssignmentProps {
 }
 
 const submitAssignment: React.FunctionComponent<IsubmitAssignmentProps> = (props) => {
-  return ();
+  return (<></>);
 };
 
 export default submitAssignment;

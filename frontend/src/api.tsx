@@ -17,7 +17,8 @@ export interface Login_details {
 }
 
 function getUser() {
-    return JSON.parse(localStorage.getItem('user'))
+    const user = localStorage.getItem('user')
+    return user ? JSON.parse(user) : user
 }
 
 const getEndpoint = async (endpoint: string,) => {

@@ -11,7 +11,7 @@ const createCourse: React.FunctionComponent<IcreateCourseProps> = (props) => {
 
     })
 
-    const handleChange = (e: React.FormEvent) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -22,7 +22,7 @@ const createCourse: React.FunctionComponent<IcreateCourseProps> = (props) => {
 
     }
     return (
-        <form method={"POST"} onSumbit={createCourse}>
+        <form method={"POST"} onSubmit={createCourse}>
             <input name="title" value={formData.title} onChange={handleChange}></input>
         </form>
     );

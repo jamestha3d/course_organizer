@@ -15,6 +15,7 @@ const Home = (props: Props) => {
     const [courses, setCourses] = useState<any>(null)
     const [isLoading, setIsLoading] = useState(true)
     const { user } = UseAuthContext()
+    const [currentUser, setCurrentUser] = useState<any>(null)
     const getcourses = async () => {
         const courses: any = await getCourses()
         setCourses(courses)
@@ -27,26 +28,27 @@ const Home = (props: Props) => {
             if (user) {
                 getcourses()
             }
-
+            setCurrentUser(user.user)
         }, [user]
 
     )
 
-
     return (
         <div className="page">
             <Container>
-            <Navbar />
-            <TopNav title="Home" />
+            {/* <Navbar /> */}
+            {/* <TopNav title="Home" /> */}
             {/* <h3> Home </h3> */}
-            <br /> <hr />
-            <div className="aaaa">
+            <br /> 
+            <h2> Welcome to {process.env.REACT_APP_NAME} </h2>
+            <hr />
+            <div className="">
 
-                <div className="aaa">
-                    <div className={"aaa"}>
+                <div className="">
+                    <div className={""}>
 
                     </div>
-                    <div>This is the home page.</div>
+                    <div><h4>This is {currentUser?.email} page.</h4></div>
                     {/* <h3> Courses</h3> */}
                     <ul>
                         {isLoading ? <> Courses Loading.. Please wait</> : <>{courses && courses.map((course: any, index: number) => (<li key={index}> {course.title}</li>))}</>}

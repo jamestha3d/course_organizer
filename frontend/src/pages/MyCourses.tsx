@@ -6,7 +6,7 @@ interface IMyCoursesProps {
 const MyCourses: React.FunctionComponent<IMyCoursesProps> = (props) => {
 
   return (
-    
+    <></>
   );
 };
 
