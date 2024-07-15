@@ -36,11 +36,8 @@ const Home = (props: Props) => {
     return (
         <div className="page">
             <Container>
-            {/* <Navbar /> */}
-            {/* <TopNav title="Home" /> */}
-            {/* <h3> Home </h3> */}
             <br /> 
-            <h2> Welcome to {process.env.REACT_APP_NAME} </h2>
+            <h2> Welcome, <span style={{color:'grey'}}> {currentUser?.email}</span> </h2>
             <hr />
             <div className="">
 
@@ -48,12 +45,16 @@ const Home = (props: Props) => {
                     <div className={""}>
 
                     </div>
-                    <div><h4>This is {currentUser?.email} page.</h4></div>
-                    {/* <h3> Courses</h3> */}
+                    <div><h6> Start learning or continue a course. . .</h6></div>
+                    <h5> My Courses</h5>
                     <ul>
                         {isLoading ? <> Courses Loading.. Please wait</> : <>{courses && courses.map((course: any, index: number) => (<li key={index}> {course.title}</li>))}</>}
 
                     </ul>
+
+                    <h5> Explore other courses that may interest you</h5>
+
+                    <span> Insert other courses for user here</span>
 
                 </div>
 

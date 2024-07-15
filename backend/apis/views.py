@@ -54,10 +54,12 @@ class CourseView(viewsets.ModelViewSet):
     filter_fields = '__all__'
     lookup_field = 'guid'
 
-    # def get_queryset(self):
-    #     queryset = self.queryset
+    # def get_queryset(self, *args, **kwargs):
+    #     queryset = self.queryset.all() if self.request.user.is_superuser else self.queryset.filter(author=self.request.user)
     #     return queryset
 
+    # def list(self, request):
+    #     return Response()
 
 class ClassroomView(viewsets.ModelViewSet):
     permission_classes = []

@@ -26,9 +26,14 @@ function App() {
   
   useEffect(
     () => {
+        //setLoggedInUser(user.user)
         if (user) {
-            setLoggedInUser(user)
+            setLoggedInUser(user.user)
         }
+        // else{
+        //   setLoggedInUser(null)
+        // }
+        console.log('use effect ran', user, loggedInUser)
 
     }, [user]
 
@@ -62,4 +67,5 @@ function App() {
   );
 }
 
+//Make sure log in and sign up return same data
 export default App;

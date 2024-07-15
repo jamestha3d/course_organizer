@@ -40,11 +40,11 @@ const Layout = ({ children }) => {
                 Recommended
               </NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link href="/" disabled>
-              Link
+            <Nav.Link href="/create">
+              Create
             </Nav.Link>
           </Nav>
-          <Nav.Link href="dashboard"><FaIcons.FaBell/></Nav.Link>
+          <Nav.Link href="/notifications" disabled><FaIcons.FaBell/></Nav.Link>
           
           <Form className="d-flex">
             <Form.Control
@@ -58,12 +58,12 @@ const Layout = ({ children }) => {
           
 
           <NavDropdown title="Me" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#action3">Profile</NavDropdown.Item>
-              <NavDropdown.Item href="#action4">
+              <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+              <NavDropdown.Item href="/settings">
                 Settings 
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="#action5">
+              <NavDropdown.Item href="/login">
                 <SignOutButton />
               </NavDropdown.Item>
             </NavDropdown>

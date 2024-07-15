@@ -3,6 +3,7 @@ from utils.models import GUIDModel
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from autoslug import AutoSlugField #from django-autoslug
+import datetime
 # Create your models here.
 import reversion
 
@@ -70,27 +71,29 @@ class Session(GUIDModel):
     course = models.ForeignKey('Course', on_delete=models.SET_NULL, null=True)
     start_date = models.DateTimeField(default=now)
     end_date = models.DateTimeField(default=now)
-    students = models.ManyToManyField('Profile', related_name='Courses_registered', through='StudentSession', through_fields=('session','student'))
-    instructors = models.ManyToManyField('Profile', related_name='Courses_teaching')
+    students = models.ManyToManyField('Profile', related_name='courses_registered', through='StudentSession', through_fields=('session','student'))
+    instructors = models.ManyToManyField('Profile', related_name='courses_teaching')
 
 class StudentSession(GUIDModel):
     session = models.ForeignKey('Session', on_delete=models.SET_NULL, null=True)
     student = models.ForeignKey('Profile', on_delete=models.SET_NULL, null=True)
 
 class Cohort(GUIDModel):
-    #session is for one course, cohort is for multiple courses. 
-    #if students join a cohort, they will automatically be subscribed to every course in the cohort.
+    '''
+        session is for one course, cohort is for multiple courses. 
+        if students join a cohort, they will automatically be subscribed to every course in the cohort.
+    '''
     courses = models.ManyToManyField('Course')
     start_date = models.DateTimeField(default=now)
-    students = models.ManyToManyField('Profile', related_name='Cohorts_registered')
-    instructors = models.ManyToManyField('Profile', related_name='Cohorts_teaching')
+    students = models.ManyToManyField('Profile', related_name='cohorts_registered')
+    instructors = models.ManyToManyField('Profile', related_name='cohorts_teaching')
 
 
 class Discussion(GUIDModel):
     pass
 
 class Post(GUIDModel):
-    content = models.TextField(max_length=1000)
+    content = models.TextField()
     poster = models.ForeignKey('Profile', on_delete=models.CASCADE, related_name="posts")
     likes = models.ManyToManyField('Profile', blank=True, related_name="posts_liked")
     
@@ -124,10 +127,10 @@ class Profile(GUIDModel):
         ('TEACHER', 'TEACHER')
         )
     #image = models.ImageField(default='default.jpg', upload_to='profile_pics')
-    roles = models.CharField(
+    role = models.CharField(
         max_length=255, default='STUDENT', choices=ROLES
     )
-    img = models.ImageField(null=True, blank=True, default='default.jpeg')
+    image = models.ImageField(null=True, blank=True, default='default.jpeg')
 
     class Meta:
         ordering = ['created']
@@ -142,7 +145,12 @@ class Profile(GUIDModel):
 class Lesson(GUIDModel):
     title = models.CharField(max_length=256)
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lessons')
-    video_link = models.URLField()
+    video_link = models.URLField(null=True)
+    meeting_link = models.URLField(null=True)
+    start_time = models.DateTimeField(null=True)
+    one_hour = datetime.time(1,0,0)
+    duration = models.TimeField(default=one_hour, null=True)
+    notes = models.ForeignKey('LessonNote', on_delete=models.CASCADE, null=True)
     description = models.TextField()
     instructor = models.ManyToManyField(Profile, related_name='lessons', through='LessonInstructor', through_fields=('lesson', 'instructor'))
     assignments = models.ManyToManyField(Assignment, related_name='assignments' )
@@ -161,3 +169,11 @@ class LessonPlaylist(GUIDModel):
     lesson = models.ForeignKey('Lesson', on_delete=models.CASCADE)
     playlist = models.ForeignKey('Playlist', on_delete=models.CASCADE)
     number = models.IntegerField()
+
+class CourseRegistration(GUIDModel):
+    pass
+
+class LessonNote(GUIDModel):
+    title = models.CharField(max_length= 20)
+    body = models.TextField()
+    author = models.ForeignKey('Profile', on_delete=models.SET_NULL, null=True)
