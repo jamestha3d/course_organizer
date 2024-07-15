@@ -20,7 +20,11 @@ export const AuthContextProvider = ({ children }) => {
         () => {
             const user = JSON.parse(localStorage.getItem('user'))
             if (user) {
+                console.log('user found', user)
                 dispatch({ type: 'LOGIN', payload: user })
+            }
+            else{
+                console.log('user not found')
             }
         },
         []

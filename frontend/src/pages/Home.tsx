@@ -4,7 +4,7 @@ import { getCourses } from "../api";
 import Navbar from "../components/Navbar";
 import { UseAuthContext } from "../hooks/useAuthContext";
 import TopNav from "../components/TopNav";
-
+import Container from 'react-bootstrap/Container';
 interface Props {
 }
 
@@ -35,6 +35,7 @@ const Home = (props: Props) => {
 
     return (
         <div className="page">
+            <Container>
             <Navbar />
             <TopNav title="Home" />
             {/* <h3> Home </h3> */}
@@ -56,7 +57,7 @@ const Home = (props: Props) => {
 
 
             </div>
-
+            </Container>
 
         </div>
     )

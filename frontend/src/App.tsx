@@ -8,8 +8,9 @@ import Signup from './pages/Signup';
 import useToken from './hooks/useToken';
 import { UseAuthContext } from './hooks/useAuthContext';
 import Dashboard from './pages/Dashboard';
-import Sidebar from './components/sidebar/Sidebar';
+//import Sidebar from './components/sidebar/Sidebar';
 import Create from './pages/Create';
+import Layout from './pages/Layout';
 
 
 function App() {
@@ -22,6 +23,11 @@ function App() {
   }
 
   const { user } = UseAuthContext()
+  if (user) {
+    console.log('user exists', user)
+  } else {
+    console.log('no user')
+  }
   // const user = JSON.parse(localStorage.getItem('user'))
 
   const NotFound = () => (
@@ -32,7 +38,8 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Sidebar>
+      {/* <Sidebar> */}
+      <Layout>
         <Routes>
           <Route path='/' element={user ? <Home /> : <Navigate to="/login" />}
           />
@@ -42,7 +49,8 @@ function App() {
           <Route path="/create" element={user ? <Create /> : <Navigate to="/login" />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </Sidebar>
+      {/* </Sidebar> */}
+      </Layout>
     </BrowserRouter >
   );
 }
