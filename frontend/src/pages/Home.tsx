@@ -48,10 +48,10 @@ const Home = (props: Props) => {
                     </div>
                     <div>This is the home page.</div>
                     {/* <h3> Courses</h3> */}
-                    {/* <ul>
+                    <ul>
                         {isLoading ? <> Courses Loading.. Please wait</> : <>{courses && courses.map((course: any, index: number) => (<li key={index}> {course.title}</li>))}</>}
 
-                    </ul> */}
+                    </ul>
 
                 </div>
 

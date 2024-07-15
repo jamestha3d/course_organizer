@@ -11,11 +11,11 @@ import Dashboard from './pages/Dashboard';
 //import Sidebar from './components/sidebar/Sidebar';
 import Create from './pages/Create';
 import Layout from './pages/Layout';
-
+import { useState, useEffect } from 'react';
 
 function App() {
   const { token, setToken } = useToken();
-
+  const [loggedInUser, setLoggedInUser] = useState(UseAuthContext())
   //let user: boolean = true;
   if (!token) {
     //return <Login setToken={setToken} />
@@ -23,11 +23,18 @@ function App() {
   }
 
   const { user } = UseAuthContext()
-  if (user) {
-    console.log('user exists', user)
-  } else {
-    console.log('no user')
-  }
+  
+  useEffect(
+    () => {
+        if (user) {
+            setLoggedInUser(user)
+        }
+
+    }, [user]
+
+)
+
+  // user ? console.log('USER') : console.log('NO USERRRR')
   // const user = JSON.parse(localStorage.getItem('user'))
 
   const NotFound = () => (
@@ -45,7 +52,7 @@ function App() {
           />
           <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
           <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
-          <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
+          <Route path="/dashboard" element={loggedInUser ? <Dashboard /> : <Navigate to="/login" />} />
           <Route path="/create" element={user ? <Create /> : <Navigate to="/login" />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

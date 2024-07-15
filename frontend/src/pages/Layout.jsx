@@ -19,7 +19,7 @@ const Layout = ({ children }) => {
         <>
         <Navbar expand="lg" className="bg-body-tertiary">
       <Container fluid>
-        <Navbar.Brand href="#">{APP_NAME}</Navbar.Brand>
+        <Navbar.Brand href="/">{APP_NAME}</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
