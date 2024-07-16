@@ -77,6 +77,7 @@ class Session(GUIDModel):
 class StudentSession(GUIDModel):
     session = models.ForeignKey('Session', on_delete=models.SET_NULL, null=True)
     student = models.ForeignKey('Profile', on_delete=models.SET_NULL, null=True)
+    #extra things
 
 class Cohort(GUIDModel):
     '''
@@ -103,6 +104,7 @@ class Post(GUIDModel):
     def num_likes(self):
         return self.likes.all().count()
 
+#LMS
 class PostComment(GUIDModel):
     pass
 
@@ -154,6 +156,7 @@ class Lesson(GUIDModel):
     description = models.TextField()
     instructor = models.ManyToManyField(Profile, related_name='lessons', through='LessonInstructor', through_fields=('lesson', 'instructor'))
     assignments = models.ManyToManyField(Assignment, related_name='assignments' )
+    #track attendance
 
 class LessonInstructor(GUIDModel):
     lesson = models.ForeignKey('Lesson', on_delete=models.CASCADE)

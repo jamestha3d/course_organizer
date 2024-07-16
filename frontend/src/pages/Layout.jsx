@@ -10,10 +10,11 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from 'react-bootstrap/Button';
 import * as FaIcons from "react-icons/fa";
 import SignOutButton from "../components/buttons/SignOutButton";
+import { useAuth } from "../utils/AuthContext";
 //example from SideBar
 
 const Layout = ({ children }) => {
-    
+    const {user} = useAuth()
     const APP_NAME= process.env.REACT_APP_NAME
     const [visible, setVisible] = useState(false)
     return (
@@ -29,8 +30,8 @@ const Layout = ({ children }) => {
             navbarScroll
           >
             <Nav.Link href="/dashboard">Dashboard</Nav.Link>
-            <Nav.Link href="/assignments">Assignments</Nav.Link>
-            <NavDropdown title="Courses" id="navbarScrollingDropdown">
+            <Nav.Link href="/teach">Teach</Nav.Link>
+            <NavDropdown title="Learning" id="navbarScrollingDropdown">
               <NavDropdown.Item href="/courses">My courses</NavDropdown.Item>
               <NavDropdown.Item href="/courses/all">
                 All Courses
@@ -56,17 +57,21 @@ const Layout = ({ children }) => {
             <Button variant="outline-success">Search</Button>
           </Form>
           
-
-          <NavDropdown title="Me" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
-              <NavDropdown.Item href="/settings">
-                Settings 
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="/login">
-                <SignOutButton />
-              </NavDropdown.Item>
-            </NavDropdown>
+          {user ? (
+             <NavDropdown title="Me" id="navbarScrollingDropdown">
+             <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
+             <NavDropdown.Item href="/settings">
+               Settings 
+             </NavDropdown.Item>
+             <NavDropdown.Divider />
+             <NavDropdown.Item href="/login">
+               <SignOutButton />
+             </NavDropdown.Item>
+           </NavDropdown>
+          ) : (
+            <Nav.Link href="/login">Log In</Nav.Link>
+          )}
+         
 
         </Navbar.Collapse>
       </Container>

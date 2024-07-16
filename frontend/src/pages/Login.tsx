@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { loginUser } from '../api';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLogin } from '../hooks/useLogin';
-
+import { useAuth } from '../utils/AuthContext';
 interface ILoginProps {
 }
 
 const Login: React.FunctionComponent<ILoginProps> = (props) => {
-    let [authMode, setAuthMode] = useState("signin")
+    // let [authMode, setAuthMode] = useState("signin")
     const [loginForm, setLoginForm] = useState({
         email: "",
         password: "",
@@ -16,6 +16,14 @@ const Login: React.FunctionComponent<ILoginProps> = (props) => {
 
     const { login, error, isLoading } = useLogin()
 
+    const navigate = useNavigate()
+    const {user} = useAuth()
+
+    useEffect( ()=> {
+        if(user){
+            navigate('/')
+        }
+    },[])
     const handleLogin = async (e: any) => {
         e.preventDefault();
         // const login: any = await loginUser(loginForm)

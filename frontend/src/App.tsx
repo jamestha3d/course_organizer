@@ -2,7 +2,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import './App.css';
 import Home from './pages/Home';
 
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import useToken from './hooks/useToken';
@@ -12,7 +12,9 @@ import Dashboard from './pages/Dashboard';
 import Create from './pages/Create';
 import Layout from './pages/Layout';
 import { useState, useEffect } from 'react';
-
+import PrivateRoutes from './utils/PrivateRoute';
+import Courses from './components/Courses';
+import { AuthProvider } from './utils/AuthContext';
 function App() {
   const { token, setToken } = useToken();
   const [loggedInUser, setLoggedInUser] = useState(UseAuthContext())
@@ -49,21 +51,30 @@ function App() {
   );
 
   return (
-    <BrowserRouter>
-      {/* <Sidebar> */}
+    <AuthProvider>
+    <Router>
       <Layout>
         <Routes>
-          <Route path='/' element={user ? <Home /> : <Navigate to="/login" />}
-          />
-          <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+          
+          {/* <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} /> */}
+          <Route path="/login" element={<Login />}/>
           <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
           <Route path="/dashboard" element={loggedInUser ? <Dashboard /> : <Navigate to="/login" />} />
           <Route path="/create" element={loggedInUser ? <Create /> : <Navigate to="/login" />} />
+          
+          <Route element={<PrivateRoutes/>}>
+            <Route path='/' element={user ? <Home /> : <Navigate to="/login" />}/>
+            <Route path="/courses" element={<Courses/>} />
+            
+          </Route>
+          {/* This is an experimental feature so using for /courses only */}
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
-      {/* </Sidebar> */}
       </Layout>
-    </BrowserRouter >
+    </Router >
+    </AuthProvider>
+          
   );
 }
 
