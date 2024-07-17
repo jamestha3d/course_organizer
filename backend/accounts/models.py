@@ -31,7 +31,7 @@ class User(AbstractUser):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [] #['username']
     def __str__(self):
-        return self.username
+        return str(self.username)
     
 # class Profile(models.Model):
 #     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_profile')

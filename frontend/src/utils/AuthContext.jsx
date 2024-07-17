@@ -14,8 +14,8 @@ export const AuthProvider = ({children}) => {
     const loginUser = async (userInfo) => {
         setLoading(true)
         try{
-            let response = await fetch(userInfo) //log user in
-            setUser(response.user)
+            // let response = await fetch(userInfo) //log user in
+            // setUser(response.user)
         }catch(error){
             console.error(error)
         }
@@ -29,8 +29,8 @@ export const AuthProvider = ({children}) => {
 
     const checkUserStatus = async () => {
         try{
-            let account = await fetch()
-            setUser(account.user)
+            // let account = await fetch()
+            // setUser(account.user)
         }catch(error){
             console.error(error)
         }

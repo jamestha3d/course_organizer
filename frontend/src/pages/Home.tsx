@@ -1,10 +1,11 @@
 
 import { useEffect, useState } from "react";
-import { getCourses } from "../api";
+import { getCourses, getApiEndPoint } from "../api";
 import Navbar from "../components/Navbar";
 import { UseAuthContext } from "../hooks/useAuthContext";
 import TopNav from "../components/TopNav";
 import Container from 'react-bootstrap/Container';
+import Loading from "../components/Loading";
 interface Props {
 }
 
@@ -17,7 +18,8 @@ const Home = (props: Props) => {
     const { user } = UseAuthContext()
     const [currentUser, setCurrentUser] = useState<any>(null)
     const getcourses = async () => {
-        const courses: any = await getCourses()
+        // const courses: any = await getCourses()
+        const courses: any = await getApiEndPoint('courses?limit=3')
         setCourses(courses)
         setIsLoading(false)
 
@@ -46,15 +48,18 @@ const Home = (props: Props) => {
 
                     </div>
                     <div><h6> Start learning or continue a course. . .</h6></div>
-                    <h5> My Courses</h5>
+                    <h5> My Recent Courses</h5>
                     <ul>
-                        {isLoading ? <> Courses Loading.. Please wait</> : <>{courses && courses.map((course: any, index: number) => (<li key={index}> {course.title}</li>))}</>}
+                        {isLoading ? <> <Loading/></> : <>{courses && courses.map((course: any, index: number) => (<li key={index}> {course.title}</li>))}</>}
 
                     </ul>
 
+                    <br/>
                     <h5> Explore other courses that may interest you</h5>
 
-                    <span> Insert other courses for user here</span>
+                    <p> See All Courses...</p>
+
+                   
 
                 </div>
 

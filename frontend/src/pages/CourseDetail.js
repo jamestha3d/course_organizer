@@ -1,6 +1,7 @@
 const CourseDetail = () => {
 
-    return ();
+    return (<>
+    </>);
 }
 
 export default CourseDetail

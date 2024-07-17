@@ -1,6 +1,6 @@
 import Card from 'react-bootstrap/Card';
 
-const Course = ({ img, body, title, instructor }) => {
+const TitleCard = ({ img, body, title, instructor }) => {
 
     return (
         <Card>
@@ -18,4 +18,4 @@ const Course = ({ img, body, title, instructor }) => {
     )
 }
 
-export default Course
+export default TitleCard

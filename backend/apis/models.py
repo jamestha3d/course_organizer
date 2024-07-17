@@ -71,9 +71,11 @@ class Session(GUIDModel):
     course = models.ForeignKey('Course', on_delete=models.SET_NULL, null=True)
     start_date = models.DateTimeField(default=now)
     end_date = models.DateTimeField(default=now)
-    students = models.ManyToManyField('Profile', related_name='courses_registered', through='StudentSession', through_fields=('session','student'))
-    instructors = models.ManyToManyField('Profile', related_name='courses_teaching')
+    students = models.ManyToManyField('Profile', related_name='sessions_registered', through='StudentSession', through_fields=('session','student'))
+    instructors = models.ManyToManyField('Profile', related_name='sessions_teaching')
 
+    def __str__(self) -> str:
+        return f"{self.start_date} {self.end_date}"
 class StudentSession(GUIDModel):
     session = models.ForeignKey('Session', on_delete=models.SET_NULL, null=True)
     student = models.ForeignKey('Profile', on_delete=models.SET_NULL, null=True)
@@ -83,11 +85,15 @@ class Cohort(GUIDModel):
     '''
         session is for one course, cohort is for multiple courses. 
         if students join a cohort, they will automatically be subscribed to every course in the cohort.
+        Cohorts can be public or private. students will only be able to join private cohorts if they are sent a link. Creating a public cohort/ more than 1 cohort will be a premium feature?. joining more than 1 cohort at a time will  be a premium feature.
     '''
+    title = models.CharField(max_length=200)
     courses = models.ManyToManyField('Course')
     start_date = models.DateTimeField(default=now)
+    end_date = models.DateTimeField(null=True)
     students = models.ManyToManyField('Profile', related_name='cohorts_registered')
     instructors = models.ManyToManyField('Profile', related_name='cohorts_teaching')
+    ispublic = models.BooleanField(default=True)
 
 
 class Discussion(GUIDModel):

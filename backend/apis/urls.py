@@ -1,7 +1,7 @@
 #from django.conf.urls import url, include
 from rest_framework import routers
 from django.urls import include, re_path
-from .views import index, homepage, PostCommentView, CourseView, AssignmentView, ClassroomView, ProfileView, LessonView
+from .views import index, homepage, PostCommentView, CourseView, AssignmentView, ClassroomView, ProfileView, LessonView, CohortView
 from django.urls import path
 
 router = routers.DefaultRouter()
@@ -15,6 +15,8 @@ router.register(r'profiles',
                 ProfileView, 'profiles')
 router.register(r'lessons',
                 LessonView, 'lessons')
+router.register(r'cohorts',
+                CohortView, 'lessons')
 urlpatterns = [
     path("index/", homepage, name="apis_home"),
     path('', include(router.urls))

@@ -37,8 +37,8 @@ const Layout = ({ children }) => {
                 All Courses
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="/courses/recommended">
-                Recommended
+              <NavDropdown.Item href="/cohorts/all">
+                Cohorts
               </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link href="/create">
@@ -78,6 +78,10 @@ const Layout = ({ children }) => {
     </Navbar>
         
         <main>{children}</main>
+        <br/><br/>
+        <footer className="footer" style={{justifyContent: 'center', alignItems: 'center', position: 'relative', textAlign: 'center'}}>
+          <p>© 2024 Tangitex Technologies. All rights reserved.</p>
+        </footer>
         </>
     );
 }

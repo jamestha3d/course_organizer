@@ -1,5 +1,5 @@
 import CardGroup from 'react-bootstrap/CardGroup';
-import Course from './Course';
+import Course from './TitleCard';
 import { useState, useEffect } from 'react';
 import { UseAuthContext } from '../hooks/useAuthContext';
 import { getCourses } from '../api';

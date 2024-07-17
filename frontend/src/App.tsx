@@ -11,10 +11,13 @@ import Dashboard from './pages/Dashboard';
 //import Sidebar from './components/sidebar/Sidebar';
 import Create from './pages/Create';
 import Layout from './pages/Layout';
+import AllCourses from './pages/AllCourses';
+import AllCohorts from './pages/AllCohorts';
 import { useState, useEffect } from 'react';
 import PrivateRoutes from './utils/PrivateRoute';
 import Courses from './components/Courses';
 import { AuthProvider } from './utils/AuthContext';
+import CohortDetail from './pages/CohortDetail';
 function App() {
   const { token, setToken } = useToken();
   const [loggedInUser, setLoggedInUser] = useState(UseAuthContext())
@@ -61,7 +64,9 @@ function App() {
           <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
           <Route path="/dashboard" element={loggedInUser ? <Dashboard /> : <Navigate to="/login" />} />
           <Route path="/create" element={loggedInUser ? <Create /> : <Navigate to="/login" />} />
-          
+          <Route path="/courses/all" element={loggedInUser ? <AllCourses /> : <Navigate to="/login" />} />
+          <Route path="/cohorts/all" element={loggedInUser ? <AllCohorts /> : <Navigate to="/login" />} />
+          <Route path="/cohorts/:guid" element={loggedInUser ? <CohortDetail /> : <Navigate to="/login" />} />
           <Route element={<PrivateRoutes/>}>
             <Route path='/' element={user ? <Home /> : <Navigate to="/login" />}/>
             <Route path="/courses" element={<Courses/>} />
