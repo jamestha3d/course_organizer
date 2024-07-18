@@ -44,6 +44,9 @@ const Layout = ({ children }) => {
             <Nav.Link href="/create">
               Create
             </Nav.Link>
+            <Nav.Link href="/discussions">
+              Discussions
+            </Nav.Link>
           </Nav>
           <Nav.Link href="/notifications" disabled><FaIcons.FaBell/></Nav.Link>
           

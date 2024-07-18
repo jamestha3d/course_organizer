@@ -71,6 +71,7 @@ class CohortDetailSerializer(FlexibleSerializer):
     #instructors = serializers.SerializerMethodField()
     is_student = serializers.SerializerMethodField()
     is_instructor = serializers.SerializerMethodField()
+    students_count = serializers.SerializerMethodField()
     def get_courses(self, obj):
         return list(obj.courses.values_list('title', flat=True))
     
@@ -88,6 +89,9 @@ class CohortDetailSerializer(FlexibleSerializer):
             user = self.context['request'].user
             return obj.instructors.filter(user=user).exists()
         return False
+    
+    def get_students_count(self, obj):
+        return obj.students.count()
     class Meta:
         read_only_fields = ('created',)
         model = Cohort

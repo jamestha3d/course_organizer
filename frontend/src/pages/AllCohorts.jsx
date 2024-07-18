@@ -5,6 +5,8 @@ import { UseAuthContext } from '../hooks/useAuthContext';
 import { getCourses, getApiEndPoint } from '../api';
 import { Link } from 'react-router-dom';
 import Loading from '../components/Loading';
+import BreadCrumb from '../components/Breadcrumb';
+import { Container } from 'react-bootstrap';
 function AllCohorts() {
     const [cohorts, setCohorts] = useState([])
     const [isLoading, setIsLoading] = useState(true)
@@ -32,13 +34,20 @@ function AllCohorts() {
 
     )
     return (
-        cohorts.length  ? 
+        <Container>
+        <BreadCrumb />
+
+        <Link to="#"> Create New</Link>
+        <br/> <hr/>
+        {cohorts.length  ? 
         (
         <CardGroup>
+            
             {isLoading ? <Loading/> : <>{cohorts.map((cohort, index) => (<TitleCard key={index} body={cohort.description} title={<Link to={`/cohorts/${cohort.guid}`}>{cohort.title}</Link>} instructor={cohort.instructor} />)
             )}</>}
         </CardGroup>
-        ) : <><p>There are no Cohorts available for you at this time</p></>
+        ) : <><p>There are no Cohorts available for you at this time</p></>}
+        </Container>
     );
 }
 

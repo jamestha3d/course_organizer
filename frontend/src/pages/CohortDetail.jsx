@@ -34,7 +34,7 @@ const CohortDetail = () => {
         cohort ? 
         (
         <>
-            {isLoading ? <Loading/> : <><Cohort title={cohort.title} instructors={cohort.instructors} start_date={cohort.start_date} end_date={cohort.end_date} courses={cohort.courses} is_instructor={cohort.is_instructor} is_student={cohort.is_student} guid={guid}/></>}
+            {isLoading ? <Loading/> : <><Cohort title={cohort.title} instructors={cohort.instructors} start_date={cohort.start_date} end_date={cohort.end_date} courses={cohort.courses} is_instructor={cohort.is_instructor} is_student={cohort.is_student} students_count={cohort.students_count} guid={guid}/></>}
         </>
         ) : isLoading? <Loading /> : <p>You have no registered courses</p>
     );

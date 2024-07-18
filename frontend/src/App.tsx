@@ -18,6 +18,9 @@ import PrivateRoutes from './utils/PrivateRoute';
 import Courses from './components/Courses';
 import { AuthProvider } from './utils/AuthContext';
 import CohortDetail from './pages/CohortDetail';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import Discussions from './pages/Discussions';
 function App() {
   const { token, setToken } = useToken();
   const [loggedInUser, setLoggedInUser] = useState(UseAuthContext())
@@ -70,6 +73,9 @@ function App() {
           <Route element={<PrivateRoutes/>}>
             <Route path='/' element={user ? <Home /> : <Navigate to="/login" />}/>
             <Route path="/courses" element={<Courses/>} />
+            <Route path='/profile' element={<Profile/>}/>
+            <Route path="/settings" element={<Settings/>} />
+            <Route path="/discussions" element={<Discussions/>} />
             
           </Route>
           {/* This is an experimental feature so using for /courses only */}
