@@ -8,9 +8,9 @@ from rest_framework import status
 from rest_framework.decorators import api_view, action, permission_classes
 from reversion.models import Version
 from django.db.models import F
-from .models import Course, Assignment, Classroom, Lesson, User, Profile, Post, PostComment, Cohort
+from .models import Course, Assignment, Classroom, Lesson, User, Profile, Post, PostComment
 from rest_framework import status, viewsets
-from .serializers import ClassroomSerializer, CohortDetailSerializer, CourseSerializer, LessonSerializer, ProfileSerializer, PostSerializer, PostCommentSerializer, AssignmentSerializer, CohortSerializer
+from .serializers import ClassroomSerializer, ClassroomDetailSerializer, CourseSerializer, LessonSerializer, ProfileSerializer, PostSerializer, PostCommentSerializer, AssignmentSerializer
 from django.shortcuts import get_object_or_404
 
 # Create your views here.
@@ -69,8 +69,8 @@ class CourseView(viewsets.ModelViewSet):
     def mycourses(self, request):
         # user_courses = request.user.get_courses()
         # user_sessions = Session.objects.filter(user=user)
-        user_cohorts = Cohort.objects.filter(students__user=request.user).distinct().values_list('courses', flat=True)
-        user_courses = Course.objects.filter(guid__in=user_cohorts)
+        user_classrooms = Classroom.objects.filter(students__user=request.user).distinct().values_list('courses', flat=True)
+        user_courses = Course.objects.filter(guid__in=user_classrooms)
         pages = self.paginate_queryset(user_courses)
 
         if pages is not None:
@@ -142,16 +142,16 @@ class LessonView(viewsets.ModelViewSet):
     #     return queryset
 
 
-class CohortView(viewsets.ModelViewSet):
+class ClassroomView(viewsets.ModelViewSet):
     permission_classes = []
-    serializer_class = CohortSerializer
-    queryset = Cohort.objects.all()
+    serializer_class = ClassroomSerializer
+    queryset = Classroom.objects.all()
     filter_fields = '__all__'
     lookup_field = 'guid'
 
     def retrieve(self, request, guid=None):
-        cohort = self.get_object()
-        return Response(CohortDetailSerializer(cohort, remove_fields=['students'], context={'request': request}).data)
+        classroom = self.get_object()
+        return Response(ClassroomDetailSerializer(classroom, remove_fields=['students'], context={'request': request}).data)
 
 
     @action(
@@ -159,15 +159,15 @@ class CohortView(viewsets.ModelViewSet):
         methods=['GET',],
         permission_classes=[],
     )
-    def mycohorts(self, request):
-        user_cohorts = Cohort.objects.filter(students__user=request.user).distinct()
-        pages = self.paginate_queryset(user_cohorts)
+    def myclassrooms(self, request):
+        user_classrooms = Classroom.objects.filter(students__user=request.user).distinct()
+        pages = self.paginate_queryset(user_classrooms)
 
         if pages is not None:
-            serializer = CohortSerializer(pages, many=True)
+            serializer = ClassroomSerializer(pages, many=True)
             return self.get_paginated_response(serializer.data)
         else:
-            serializer = CohortSerializer(pages, many=True)
+            serializer = ClassroomSerializer(pages, many=True)
             return Response(serializer.data)
         
     
@@ -177,15 +177,16 @@ class CohortView(viewsets.ModelViewSet):
         permission_classes=[],
     )
     def join(self, request, guid=None):
-        cohort = self.get_object()
+        classroom = self.get_object()
         user = request.user
-        if not cohort.students.filter(user=user).exists():
-            cohort.students.add(user.profile)
+        if user and not classroom.students.filter(user=user).exists():
+            classroom.students.add(user.profile)
+            #TODO return classroom data so state can be updated
             return Response( {'success': True},status=status.HTTP_201_CREATED)
         
         else:
             return Response({'success': False}, status=status.HTTP_304_NOT_MODIFIED)
-        #if user not in cohort. join cohort. else return response 'already in cohort'
+        #if user not in classroom. join classroom. else return response 'already in classroom'
 
     @action(
         detail=True,
@@ -193,10 +194,10 @@ class CohortView(viewsets.ModelViewSet):
         permission_classes=[],
     )
     def leave(self, request, guid=None):
-        cohort = self.get_object()
+        classroom = self.get_object()
         user = request.user
-        if cohort.students.filter(user=user).exists():
-            cohort.students.remove(user.profile)
+        if user and classroom.students.filter(user=user).exists():
+            classroom.students.remove(user.profile)
             return Response( {'success': True},status=status.HTTP_201_CREATED)
         
         else:

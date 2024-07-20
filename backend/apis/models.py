@@ -10,23 +10,24 @@ import reversion
 #version mixin
 
 from django.utils.timezone import now
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
-class Classroom(GUIDModel): #AKA classroom
-    #this is a classroom. an overall topic. e.g french.
-    title = models.CharField(max_length=256)
-    namespace = AutoSlugField(populate_from='title', blank=True, null=True, editable=True, always_update=False)
-    instructor = models.ForeignKey('Profile', on_delete=models.DO_NOTHING, null=True)
-    description = models.TextField(null=True)
+# class Classroom(GUIDModel): #AKA classroom
+#     #this is a classroom. an overall topic. e.g french.
+#     title = models.CharField(max_length=256)
+#     namespace = AutoSlugField(populate_from='title', blank=True, null=True, editable=True, always_update=False)
+#     instructor = models.ForeignKey('Profile', on_delete=models.DO_NOTHING, null=True)
+#     description = models.TextField(null=True)
     
-    # class Meta:
-    #     unique_together = (('title', 'tagname', 'tagvalue'),)
-    @classmethod
-    def get_domain_from_request_host(cls, request_host):
-        return [s for s in request_host.split('.') if s != 'www'][0] if request_host else None
+#     # class Meta:
+#     #     unique_together = (('title', 'tagname', 'tagvalue'),)
+#     @classmethod
+#     def get_domain_from_request_host(cls, request_host):
+#         return [s for s in request_host.split('.') if s != 'www'][0] if request_host else None
     
-    def __str__(self):
-        return f'{self.title} - {self.description}'
+#     def __str__(self):
+#         return f'{self.title} - {self.description}'
 
 class Assignment(GUIDModel):
     title = models.CharField(max_length=256)
@@ -43,27 +44,31 @@ class Submission(GUIDModel):
     attachments = models.ManyToManyField('Post')
     title = models.CharField(max_length=256)
     body = models.TextField()
-    GRADES = (
-            ('PASS', 'PASS'),
-            ('FAIL', 'FAIL'),
-            ('EXCELLENT', 'EXCELLENT'),
-            ('VERY GOOD', 'VERY GOOD'),
-            ('NOT GRADED', 'NOT GRADED'),
-            )
-    grade = models.CharField(max_length=10, choices=GRADES, default='NOT GRADED')
+    class GRADES(models.TextChoices):
+        PASS = 'PASS'
+        FAIL = 'FAIL'
+        EXCELLENT = 'EXCELLENT'
+        VERY_GOOD = 'VERY GOOD'
+        NOT_GRADED = 'NOT GRADED'
+
+    grade = models.CharField(max_length=10, choices=GRADES.choices, default=GRADES.NOT_GRADED)
     student = models.ForeignKey('Profile', on_delete=models.DO_NOTHING, null=True)
     
 
 class Course(GUIDModel):
     #this is a particular course. e.g french101 - speaking
     title = models.CharField(max_length=256)
-    classroom = models.ForeignKey(Classroom, related_name='assignments', on_delete=models.CASCADE)
     code = models.CharField(max_length=6, unique=True)
     namespace = AutoSlugField(populate_from='title', blank=True, null=True, editable=True, always_update=False)
-    #students = models.ManyToManyField('Profile', related_name='Courses_registered', null=True)
-    #instructors = models.ManyToManyField('Profile', related_name='Courses_teaching', null=True)
     description = models.TextField(null=True)
-    
+    instructors = models.ManyToManyField('Profile', related_name='courses_teaching')
+
+    def add_instructor(self, instructor:'Profile'):
+        if instructor.role != Profile.ROLES.INSTRUCTOR:
+            raise Exception('Cannot add Non Instructor as instructor')
+        
+        self.instructors.add(instructor)
+            
     def __str__(self) -> str:
         return f"{self.title} {self.code}"
     
@@ -81,19 +86,30 @@ class StudentSession(GUIDModel):
     student = models.ForeignKey('Profile', on_delete=models.SET_NULL, null=True)
     #extra things
 
-class Cohort(GUIDModel):
+class Classroom(GUIDModel): #This should be renamed to classroom
     '''
-        session is for one course, cohort is for multiple courses. 
-        if students join a cohort, they will automatically be subscribed to every course in the cohort.
-        Cohorts can be public or private. students will only be able to join private cohorts if they are sent a link. Creating a public cohort/ more than 1 cohort will be a premium feature?. joining more than 1 cohort at a time will  be a premium feature.
+        session is for one course, classroom is for multiple courses. 
+        if students join a classroom, they will automatically be subscribed to every course in the classroom.
+        Classroom can be public or private. students will only be able to join private classrooms if they are sent a link. Creating a public classroom/ more than 1 classroom will be a premium feature?. joining more than 1 classroom at a time will  be a premium feature.
+        Cohorts have been deprecated. a cohort will just be a classroom with start and end date.
+
     '''
     title = models.CharField(max_length=200)
     courses = models.ManyToManyField('Course')
-    start_date = models.DateTimeField(default=now)
+    start_date = models.DateTimeField(default=now, null=True)
     end_date = models.DateTimeField(null=True)
-    students = models.ManyToManyField('Profile', related_name='cohorts_registered')
-    instructors = models.ManyToManyField('Profile', related_name='cohorts_teaching')
-    ispublic = models.BooleanField(default=True)
+    students = models.ManyToManyField('Profile', related_name='classrooms_registered')
+    admins = models.ManyToManyField('Profile', related_name='classrooms_teaching') #maybe i should call this managers?
+    public = models.BooleanField(default=True)
+
+    def add_admin(self, admin:'Profile'):
+        #pass
+        if admin.role == Profile.ROLES.ADMIN:
+            self.admins.add(admin)
+        else:
+            raise Exception('Cannot add Non Instructor as instructor')
+    def add_student(self, student:'Profile'):
+        self.students.add(student)
 
 
 class Discussion(GUIDModel):
@@ -130,18 +146,22 @@ class Comment(GUIDModel):
 
 class Profile(GUIDModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    ROLES = (
-        ('STUDENT', 'STUDENT'),
-        ('TEACHER', 'TEACHER')
-        )
+    
+    class ROLES(models.TextChoices):
+        STUDENT = 'STUDENT', _('STUDENT')
+        INSTURCTOR= 'INSTRUCTOR', _('INSTRUCTOR')
+        ADMIN = 'ADMIN', _('ADMIN')
     #image = models.ImageField(default='default.jpg', upload_to='profile_pics')
     role = models.CharField(
-        max_length=255, default='STUDENT', choices=ROLES
+        max_length=255, default=ROLES.STUDENT, choices=ROLES.choices
     )
     image = models.ImageField(null=True, blank=True, default='default.jpeg')
 
     class Meta:
         ordering = ['created']
+
+    def __str__(self):
+        return f"{self.role}: {self.user.email}"
 
     def join_session(self, session: Session):
         if not session:

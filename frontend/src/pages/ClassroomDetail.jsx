@@ -5,16 +5,16 @@ import { UseAuthContext } from '../hooks/useAuthContext';
 import { getCourses, getApi } from '../api';
 import Loading from '../components/Loading';
 import { useParams } from 'react-router-dom';
-import Cohort from '../components/Cohort';
-const CohortDetail = () => {
-    const [cohort, setCohort] = useState([])
+import Classroom from '../components/Classroom';
+const ClassroomDetail = () => {
+    const [classroom, setClassroom] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const { user } = UseAuthContext()
     const {guid} = useParams();
-    const getcohort = async () => {
-        const cohort = await getApi(`cohorts/${guid}`)
-        if (cohort){
-            setCohort(cohort)
+    const getclassroom = async () => {
+        const classroom = await getApi(`classrooms/${guid}`)
+        if (classroom){
+            setClassroom(classroom)
         }
         
         setIsLoading(false)
@@ -24,23 +24,23 @@ const CohortDetail = () => {
     useEffect(
         () => {
             if (user) {
-                getcohort()
+                getclassroom()
             }
 
         }, [])
 
-    console.log(cohort)
+    console.log(classroom)
     return (
-        cohort ? 
+        classroom ? 
         (
         <>
-            {isLoading ? <Loading/> : <><Cohort title={cohort.title} instructors={cohort.instructors} start_date={cohort.start_date} end_date={cohort.end_date} courses={cohort.courses} is_instructor={cohort.is_instructor} is_student={cohort.is_student} students_count={cohort.students_count} guid={guid}/></>}
+            {isLoading ? <Loading/> : <><Classroom title={classroom.title} instructors={classroom.instructors} start_date={classroom.start_date} end_date={classroom.end_date} courses={classroom.courses} is_instructor={classroom.is_instructor} is_student={classroom.is_student} students_count={classroom.students_count} guid={guid}/></>}
         </>
         ) : isLoading? <Loading /> : <p>You have no registered courses</p>
     );
 }
  
-export default CohortDetail;
+export default ClassroomDetail;
 
 
 

@@ -37,8 +37,8 @@ const Layout = ({ children }) => {
                 All Courses
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="/cohorts/all">
-                Cohorts
+              <NavDropdown.Item href="/classrooms/all">
+                Classrooms
               </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link href="/create">

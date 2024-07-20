@@ -7,14 +7,14 @@ import { Link } from 'react-router-dom';
 import Loading from '../components/Loading';
 import BreadCrumb from '../components/Breadcrumb';
 import { Container } from 'react-bootstrap';
-function AllCohorts() {
-    const [cohorts, setCohorts] = useState([])
+function AllClassrooms() {
+    const [classrooms, setClassrooms] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const { user } = UseAuthContext()
-    const getcohorts = async () => {
-        const cohorts = await getApiEndPoint('cohorts')
-        if (cohorts){
-            setCohorts(cohorts)
+    const getclassrooms = async () => {
+        const classrooms = await getApiEndPoint('classrooms')
+        if (classrooms){
+            setClassrooms(classrooms)
         }
         
         setIsLoading(false)
@@ -24,7 +24,7 @@ function AllCohorts() {
     useEffect(
         () => {
             if (user) {
-                getcohorts()
+                getclassrooms()
             }
 
         }, []
@@ -39,30 +39,30 @@ function AllCohorts() {
 
         <Link to="#"> Create New</Link>
         <br/> <hr/>
-        {cohorts.length  ? 
+        {classrooms.length  ? 
         (
         <CardGroup>
             
-            {isLoading ? <Loading/> : <>{cohorts.map((cohort, index) => (<TitleCard key={index} body={cohort.description} title={<Link to={`/cohorts/${cohort.guid}`}>{cohort.title}</Link>} instructor={cohort.instructor} />)
+            {isLoading ? <Loading/> : <>{classrooms.map((classroom, index) => (<TitleCard key={index} body={classroom.description} title={<Link to={`/classrooms/${classroom.guid}`}>{classroom.title}</Link>} instructor={classroom.instructor} />)
             )}</>}
         </CardGroup>
-        ) : <><p>There are no Cohorts available for you at this time</p></>}
+        ) : <><p>There are no Classrooms available for you at this time</p></>}
         </Container>
     );
 }
 
-export default AllCohorts;
+export default AllClassrooms;
 
 
 // import { Container } from "react-bootstrap";
 
-// const AllCohorts = () => {
+// const AllClassrooms = () => {
 //     return ( 
 //         <Container> 
-//         <h1>All Cohorts</h1>
-//         <p>This page displays all the cohorts that the user can view</p>
+//         <h1>All Classrooms</h1>
+//         <p>This page displays all the classrooms that the user can view</p>
 //         </Container>
 //             );
 // }
  
-// export default AllCohorts;
+// export default AllClassrooms;

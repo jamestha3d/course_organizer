@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from utils.serializers import FlexibleSerializer
-from .models import Course, Classroom, Lesson, Profile, Post, PostComment, Assignment, Cohort
+from .models import Course, Classroom, Lesson, Profile, Post, PostComment, Assignment
 
 class ProfileSerializer(FlexibleSerializer):
 
@@ -59,18 +59,18 @@ class CourseCodeSerializer(FlexibleSerializer):
     class Meta:
         model = Course
         fields = ('code',)
-class CohortSerializer(FlexibleSerializer):
+class ClassroomSerializer(FlexibleSerializer):
     class Meta:
         read_only_fields = ('created',)
-        model = Cohort
+        model = Classroom
         fields = '__all__'
 
-class CohortDetailSerializer(FlexibleSerializer):
+class ClassroomDetailSerializer(FlexibleSerializer):
     # courses = CourseCodeSerializer(many=True)
     courses = serializers.SerializerMethodField()
     #instructors = serializers.SerializerMethodField()
     is_student = serializers.SerializerMethodField()
-    is_instructor = serializers.SerializerMethodField()
+    # is_instructor = serializers.SerializerMethodField()
     students_count = serializers.SerializerMethodField()
     def get_courses(self, obj):
         return list(obj.courses.values_list('title', flat=True))
@@ -84,15 +84,15 @@ class CohortDetailSerializer(FlexibleSerializer):
             return obj.students.filter(user=user).exists()
         return False
     
-    def get_is_instructor(self, obj):
-        if self.context and 'request' in self.context:
-            user = self.context['request'].user
-            return obj.instructors.filter(user=user).exists()
-        return False
+    # def get_is_instructor(self, obj):
+    #     if self.context and 'request' in self.context:
+    #         user = self.context['request'].user
+    #         return obj.instructors.filter(user=user).exists()
+    #     return False
     
     def get_students_count(self, obj):
         return obj.students.count()
     class Meta:
         read_only_fields = ('created',)
-        model = Cohort
+        model = Classroom
         fields = '__all__'
