@@ -23,29 +23,21 @@ import Settings from './pages/Settings';
 import Discussions from './pages/Discussions';
 function App() {
   const { token, setToken } = useToken();
-  const [loggedInUser, setLoggedInUser] = useState(UseAuthContext())
-  //let user: boolean = true;
+
   if (!token) {
     //return <Login setToken={setToken} />
     //user = false;
   }
 
   const { user } = UseAuthContext()
-  
-  useEffect(
-    () => {
-        //setLoggedInUser(user.user)
-        if (user) {
-            setLoggedInUser(user.user)
-        }
-        // else{
-        //   setLoggedInUser(null)
-        // }
-        console.log('use effect ran', user, loggedInUser)
+  const [count, setCount] = useState(0)
+//   useEffect(
+//     () => {
+//       console.log('useeffect running')
+//       console.log('user is', user)
+//     }, [user]
 
-    }, [user]
-
-)
+// )
 
   // user ? console.log('USER') : console.log('NO USERRRR')
   // const user = JSON.parse(localStorage.getItem('user'))
@@ -62,14 +54,14 @@ function App() {
       <Layout>
         <Routes>
           
-          {/* <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} /> */}
-          <Route path="/login" element={<Login />}/>
+          <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+          {/* <Route path="/login" element={<Login />}/> //works with useAuth*/} 
           <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
-          <Route path="/dashboard" element={loggedInUser ? <Dashboard /> : <Navigate to="/login" />} />
-          <Route path="/create" element={loggedInUser ? <Create /> : <Navigate to="/login" />} />
-          <Route path="/courses/all" element={loggedInUser ? <AllCourses /> : <Navigate to="/login" />} />
-          <Route path="/classrooms/all" element={loggedInUser ? <AllClassrooms /> : <Navigate to="/login" />} />
-          <Route path="/classrooms/:guid" element={loggedInUser ? <ClassroomDetail /> : <Navigate to="/login" />} />
+          <Route path="/dashboard" element={user ? <Dashboard /> : <Navigate to="/login" />} />
+          <Route path="/create" element={user ? <Create /> : <Navigate to="/login" />} />
+          <Route path="/courses/all" element={user ? <AllCourses /> : <Navigate to="/login" />} />
+          <Route path="/classrooms/all" element={user? <AllClassrooms /> : <Navigate to="/login" />} />
+          <Route path="/classrooms/:guid" element={user ? <ClassroomDetail /> : <Navigate to="/login" />} />
           <Route element={<PrivateRoutes/>}>
             <Route path='/' element={user ? <Home /> : <Navigate to="/login" />}/>
             <Route path="/courses" element={<Courses/>} />

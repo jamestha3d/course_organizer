@@ -11,10 +11,11 @@ import Button from 'react-bootstrap/Button';
 import * as FaIcons from "react-icons/fa";
 import SignOutButton from "../components/buttons/SignOutButton";
 import { useAuth } from "../utils/AuthContext";
+import { UseAuthContext } from "../hooks/useAuthContext";
 //example from SideBar
 
 const Layout = ({ children }) => {
-    const {user} = useAuth()
+    const {user} = UseAuthContext()
     const APP_NAME= process.env.REACT_APP_NAME
     const [visible, setVisible] = useState(false)
     return (
@@ -67,7 +68,7 @@ const Layout = ({ children }) => {
                Settings 
              </NavDropdown.Item>
              <NavDropdown.Divider />
-             <NavDropdown.Item href="/login">
+             <NavDropdown.Item href="#">
                <SignOutButton />
              </NavDropdown.Item>
            </NavDropdown>

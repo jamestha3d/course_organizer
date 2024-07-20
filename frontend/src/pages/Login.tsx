@@ -16,25 +16,17 @@ const Login: React.FunctionComponent<ILoginProps> = (props) => {
 
     const { login, error, isLoading } = useLogin()
 
-    const navigate = useNavigate()
-    const {user} = useAuth()
+    // const navigate = useNavigate()
+    // const {user} = useAuth()
 
-    useEffect( ()=> {
-        if(user){
-            navigate('/')
-        }
-    },[])
+    // TODO Uncommented this Jul 20. 
+    // useEffect( ()=> {
+    //     if(user){
+    //         navigate('/')
+    //     }
+    // },[])
     const handleLogin = async (e: any) => {
         e.preventDefault();
-        // const login: any = await loginUser(loginForm)
-        // if (login.data) {
-        //     const token = login.data.token.access
-        //     console.log(token)
-        // }
-        // else {
-        //     const token = false
-        //     console.log(token)
-        // }
         await login(loginForm.email, loginForm.password)
     }
 

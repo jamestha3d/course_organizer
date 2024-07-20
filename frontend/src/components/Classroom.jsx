@@ -52,7 +52,7 @@ const Classroom = ({title, instructors, courses, start_date, end_date, is_studen
         <p><b>Duration</b>: {startDate?.toLocaleDateString(undefined, options)} - {endDate ? endDate.toLocaleDateString(undefined, options) : <span style={{color:'grey'}}>No end date set</span>} </p>
 
         <p><b>instructors</b>: {instructors} </p>
-        <p><b>courses</b>: {courses.join(', ')} </p>
+        <p><b>courses</b>: {courses?.join(', ')} </p>
         <p><b>students</b>: {students} </p>
 
         <p> {isStudent ? <span> You are enrolled to this Classroom. </span> : <span> You are not enrolled!</span>}</p>
