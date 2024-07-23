@@ -21,6 +21,10 @@ import ClassroomDetail from './pages/ClassroomDetail';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import Discussions from './pages/Discussions';
+import Teach from './pages/Teach';
+import CreateCourse from './pages/CreateCourse';
+import CreateLesson from './pages/CreateLesson';
+import CourseDetail from './pages/CourseDetail';
 function App() {
   const { token, setToken } = useToken();
 
@@ -68,6 +72,10 @@ function App() {
             <Route path='/profile' element={<Profile/>}/>
             <Route path="/settings" element={<Settings/>} />
             <Route path="/discussions" element={<Discussions/>} />
+            <Route path="/teach" element={<Teach/>} />
+            <Route path="/create/course" element={<CreateCourse/>} />
+            <Route path="/create/lesson" element={<CreateLesson/>} />
+            <Route path="/courses/:guid" element={<CourseDetail/>} />
             
           </Route>
           {/* This is an experimental feature so using for /courses only */}

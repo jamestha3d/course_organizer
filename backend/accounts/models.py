@@ -30,11 +30,7 @@ class User(AbstractUser):
     objects=CustomUserManager()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [] #['username']
-    def __str__(self):
-        return str(self.username)
-    
-# class Profile(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_profile')
-#     #role = models.CharField() #Teacher /Student. teacher can be student on another course. this should be on the relationship
 
+    def __str__(self):
+        return str(self.email)
     

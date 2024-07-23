@@ -11,6 +11,10 @@ class ProfileSerializer(FlexibleSerializer):
 
 
 class CourseSerializer(FlexibleSerializer):
+    instructors = serializers.SerializerMethodField()
+
+    def get_instructors(self, obj):
+        return obj.instructors.values_list('user__email', flat=True)
     class Meta:
         read_only_fields = ('created',)
         model = Course

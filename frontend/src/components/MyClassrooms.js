@@ -28,8 +28,6 @@ function MyClassrooms() {
         }, []
 
 
-
-
     )
     return (
         classrooms.length  ? 

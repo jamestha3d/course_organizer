@@ -17,9 +17,11 @@ const Classroom = ({title, instructors, courses, start_date, end_date, is_studen
             toast.error('Something went wrong! Please try again.')
         }
         else{
+            const data = response.data
             toast.success('You are now enrolled!')
-            toggleIsStudent()
-            setStudents(students + 1)
+            //toggleIsStudent()
+            setIsStudent(data.is_student)
+            setStudents(data.students_count)
         }
 
     }
@@ -30,12 +32,13 @@ const Classroom = ({title, instructors, courses, start_date, end_date, is_studen
             toast.error('Something went wrong! Please try again.')
         }
         else{
+            const data = response.data
+            console.log(response)
             toast.success('You left successfully!')
-            toggleIsStudent()
-            setStudents(students - 1)
+            //toggleIsStudent()
+            setIsStudent(data.is_student)
+            setStudents(data.students_count)
         }
-        // toast.success('You left successfully!')
-        // toggleIsStudent()
         
     }
 
@@ -54,10 +57,20 @@ const Classroom = ({title, instructors, courses, start_date, end_date, is_studen
         <p><b>instructors</b>: {instructors} </p>
         <p><b>courses</b>: {courses?.join(', ')} </p>
         <p><b>students</b>: {students} </p>
-
+        
         <p> {isStudent ? <span> You are enrolled to this Classroom. </span> : <span> You are not enrolled!</span>}</p>
         {/* clicking the enroll/leave button should bring up a modal to confirm your enrollment */}
         <p> {isStudent ? <Button onClick={leaveClassroom} variant="danger"> Leave</Button> : <Button onClick={joinClassroom} variant="primary"> Enroll!</Button>}</p>
+
+        <hr/>
+        <h3>Other stats</h3>
+        <p>We should see:</p>
+        <ul>
+            <li> Assignments: pending and previous</li>
+            <li> Courses: click on individual course to see the next schedule</li>
+            <li> Time table</li>
+            <li> Lessons: Upcoming and previous.</li>
+        </ul>
         <ToastContainer />
     </Container> );
 }

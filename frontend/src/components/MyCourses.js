@@ -35,7 +35,7 @@ function MyCourses() {
         courses.length  ? 
         (
         <CardGroup>
-            {isLoading ? <Loading/> : <>{courses.map((course, index) => (<TitleCard key={index} body={course.description} title={course.title} instructor={course.instructor} />)
+            {isLoading ? <Loading/> : <>{courses.map((course, index) => (<TitleCard key={index} body={course.description} title={course.title} instructor={course.instructor} link={`/courses/${course.guid}`}/>)
             )}</>}
         </CardGroup>
         ) : isLoading? <Loading /> : <p>You have no registered courses</p>

@@ -41,7 +41,7 @@ class Assignment(GUIDModel):
     
 class Submission(GUIDModel):
     assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE, related_name='submission', null=True)
-    attachments = models.ManyToManyField('Post')
+    attachments = models.ManyToManyField('Post') #foreign key on Post model or other attachment model instead?
     title = models.CharField(max_length=256)
     body = models.TextField()
     class GRADES(models.TextChoices):
@@ -73,6 +73,8 @@ class Course(GUIDModel):
         return f"{self.title} {self.code}"
     
 class Session(GUIDModel):
+    # Maybe classroom will be classroom of students and session will be a session that starts and ends. and classroom doesnt start and end. just like in a university.
+    # The session starts. and we add courses to the session.?
     course = models.ForeignKey('Course', on_delete=models.SET_NULL, null=True)
     start_date = models.DateTimeField(default=now)
     end_date = models.DateTimeField(default=now)
@@ -84,6 +86,8 @@ class Session(GUIDModel):
 class StudentSession(GUIDModel):
     session = models.ForeignKey('Session', on_delete=models.SET_NULL, null=True)
     student = models.ForeignKey('Profile', on_delete=models.SET_NULL, null=True)
+    #assignments?
+    #submissions?
     #extra things
 
 class Classroom(GUIDModel): #This should be renamed to classroom
@@ -95,7 +99,7 @@ class Classroom(GUIDModel): #This should be renamed to classroom
 
     '''
     title = models.CharField(max_length=200)
-    courses = models.ManyToManyField('Course')
+    courses = models.ManyToManyField('Course') # TODO maybe courses should belong to only one classroom. that means we will change the unique code structure.
     start_date = models.DateTimeField(default=now, null=True)
     end_date = models.DateTimeField(null=True)
     students = models.ManyToManyField('Profile', related_name='classrooms_registered')
@@ -110,6 +114,9 @@ class Classroom(GUIDModel): #This should be renamed to classroom
             raise Exception('Cannot add Non Instructor as instructor')
     def add_student(self, student:'Profile'):
         self.students.add(student)
+
+    def __str__(self):
+        return f"{self.title} {self.start_date.date()}"
 
 
 class Discussion(GUIDModel):
@@ -146,10 +153,11 @@ class Comment(GUIDModel):
 
 class Profile(GUIDModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    
+    # first_name = models.CharField(max_length=36, null=True) #
+    # profile_image = models.ImageField(upload_to='profile_pics', null=True, blank=True, default='default.jpg')
     class ROLES(models.TextChoices):
         STUDENT = 'STUDENT', _('STUDENT')
-        INSTURCTOR= 'INSTRUCTOR', _('INSTRUCTOR')
+        INSTRUCTOR = 'INSTRUCTOR', _('INSTRUCTOR')
         ADMIN = 'ADMIN', _('ADMIN')
     #image = models.ImageField(default='default.jpg', upload_to='profile_pics')
     role = models.CharField(

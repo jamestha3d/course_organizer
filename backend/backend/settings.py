@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     "corsheaders", #1
     "apis",
     "accounts",
+    "emails",
 ]
 
 CORS_ALLOWED_ORIGINS = ['http://192.168.2.15:3000', 'http://localhost:3000'] #'http://localhost:5173', #2
@@ -196,3 +197,11 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass

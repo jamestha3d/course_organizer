@@ -37,3 +37,5 @@ frontend/build
 frontend/coverage
 
 script.py
+
+local_settings.py
