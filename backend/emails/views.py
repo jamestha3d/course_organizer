@@ -11,6 +11,8 @@ from django.http import (
 )
 from rest_framework.views import APIView
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
+from django.contrib.sites.shortcuts import get_current_site
+
 
 
 @csrf_exempt
@@ -38,7 +40,30 @@ class CustomThrottleClass(UserRateThrottle):
 class EmailView(APIView):
     throttle_classes = [CustomThrottleClass, AnonRateThrottle]
     def get(self, request, *args, **kwargs):
-        return Response({"message": 'This is a GET request'})
+        from urllib.parse import urlparse
+        print(request.scheme)
+        print(get_current_site(request).domain)
+        host = request.META.get('HTTP_HOST', '')
+        host_dict = {key:str(value) for key,value in request.META.items()}
+        from django.http import JsonResponse
+        # host = dict(host)
+        absolute_uri = request.build_absolute_uri()
+        print(absolute_uri)
+        # Parse the URI to extract components
+        parsed_uri = urlparse(absolute_uri)
+
+        # Extract the domain
+        domain = parsed_uri.netloc
+
+        # Scheme (http or https)
+        scheme = parsed_uri.scheme
+
+        # Path
+        path = parsed_uri.path
+        # response1 = {"message": 'This is a GET request', 'domain': domain, 'scheme': scheme, 'path': path, 'host': host, 'meta': request.META}
+        # return Response(host)
+        return JsonResponse(host_dict, json_dumps_params={'indent': 2}, safe=False)
+        
 
     def post(self, request, *args, **kwargs):
         message = request.data['message']
@@ -51,3 +76,4 @@ class EmailView(APIView):
             email, #list of receivers
             fail_silently=False)
         return Response({"message": "This is a POST request"})
+    

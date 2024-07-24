@@ -17,7 +17,7 @@ import { UseAuthContext } from "../hooks/useAuthContext";
 const PrivateRoutes = () => {
     //const user = true
     const {user} = UseAuthContext() 
-    return user ? <Outlet/> : <Navigate to='/login'/>
+    return user ? (user.user.activated ? <Outlet/> : <Navigate to='/activate'/>) : <Navigate to='/login'/>
 }
 
 export default PrivateRoutes

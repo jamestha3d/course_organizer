@@ -27,9 +27,6 @@ function MyCourses() {
 
         }, []
 
-
-
-
     )
     return (
         courses.length  ? 

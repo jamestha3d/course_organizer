@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Classroom = ({title, instructors, courses, start_date, end_date, is_student, is_instructor, students_count, guid, ...rest}) => {
 
     const [isStudent, setIsStudent] = useState(is_student)
-    const toggleIsStudent = () => setIsStudent(!isStudent)
+    // const toggleIsStudent = () => setIsStudent(!isStudent)
     const [students, setStudents] = useState(students_count)
     const joinClassroom = async () => {
         const response = await postApiEndPoint(`classrooms/${guid}/join/`)
@@ -20,6 +20,9 @@ const Classroom = ({title, instructors, courses, start_date, end_date, is_studen
             const data = response.data
             toast.success('You are now enrolled!')
             //toggleIsStudent()
+            console.log(data)
+            console.log(data.is_student)
+            console.log(data.students_count)
             setIsStudent(data.is_student)
             setStudents(data.students_count)
         }
@@ -33,7 +36,9 @@ const Classroom = ({title, instructors, courses, start_date, end_date, is_studen
         }
         else{
             const data = response.data
-            console.log(response)
+            console.log(data)
+            console.log(data.is_student)
+            console.log(data.students_count)
             toast.success('You left successfully!')
             //toggleIsStudent()
             setIsStudent(data.is_student)

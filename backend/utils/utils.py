@@ -1,10 +1,6 @@
-def EmailReplace(template, key_dict:dict):
-    key_list = list(key_dict.keys())
-
-    for item in key_list:
-        if dict[item] is None:
-            dict[item] = ''
-
-        template = template.replace("["+item+"]", dict[item])
-
-    return template
+def get_object_or_None(model, **kwargs):
+    try:
+        item = model.objects.get(**kwargs)
+        return item
+    except model.DoesNotExist:
+        return None

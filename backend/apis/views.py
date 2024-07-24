@@ -181,14 +181,10 @@ class ClassroomView(viewsets.ModelViewSet):
         user = request.user
         if user and not classroom.students.filter(user=user).exists():
             classroom.students.add(user.profile)
-            #TODO return classroom data so state can be updated
-            return Response(ClassroomDetailSerializer(classroom).data, status=status.HTTP_201_CREATED)
-            # return Response( {'success': True},status=status.HTTP_201_CREATED)
+            return Response(ClassroomDetailSerializer(classroom, context={'request': request}).data, status=status.HTTP_201_CREATED)
         
         else:
-            return Response(ClassroomDetailSerializer(classroom).data, status=status.HTTP_201_CREATED)
-            #return Response({'success': False}, status=status.HTTP_304_NOT_MODIFIED)
-        #if user not in classroom. join classroom. else return response 'already in classroom'
+            return Response({"error": "User already in classroom"}, status=status.HTTP_403_FORBIDDEN)
 
     @action(
         detail=True,
@@ -200,9 +196,7 @@ class ClassroomView(viewsets.ModelViewSet):
         user = request.user
         if user and classroom.students.filter(user=user).exists():
             classroom.students.remove(user.profile)
-            return Response(ClassroomDetailSerializer(classroom).data, status=status.HTTP_201_CREATED)
-            #return Response( {'success': True},status=status.HTTP_201_CREATED)
-        
+            return Response(ClassroomDetailSerializer(classroom, context={'request': request}).data, status=status.HTTP_201_CREATED)
+    
         else:
-            return Response(ClassroomDetailSerializer(classroom).data, status=status.HTTP_201_CREATED)
-            #return Response({'success': False}, status=status.HTTP_304_NOT_MODIFIED)
+            return Response({"error": "User not in classroom"}, status=status.HTTP_403_FORBIDDEN)
