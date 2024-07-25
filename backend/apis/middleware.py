@@ -15,6 +15,9 @@ from django.contrib.auth.middleware import get_user
 from django.utils import timezone
 from django.core.cache import cache
 from .models import Course, Assignment
+from rest_framework.response import Response
+from django.shortcuts import redirect
+from django.urls import reverse
 
 class ApiMiddleware:
     def __init__(self, get_response):
@@ -28,6 +31,11 @@ class ApiMiddleware:
 
     def __call__(self, request):
         print('call to api')
+        if request.user and not request.user.is_anonymous and request.user.is_authenticated and not request.user.is_activated:
+            allowed_paths = [reverse('login'), reverse('activate'), reverse('send_activation')]
+            if request.path not in allowed_paths:
+                return redirect('activate')
+            return Response({'message': 'User for like activated e account'})
         response = self.get_response(request)
         return response
     
@@ -45,71 +53,74 @@ class ApiMiddleware:
                 
         return response
     
+    '''
+        # 
+    '''
 
-class PortalMiddleware(object):
-    """
-    Middleware to detect the incoming hostname and take a specified action based
-    on its value.
-    """
+# class PortalMiddleware(object):
+#     """
+#     Middleware to detect the incoming hostname and take a specified action based
+#     on its value.
+#     """
 
-    def __init__(self, get_response):
-        self.get_response = get_response
-        # One-time configuration and initialization.
+#     def __init__(self, get_response):
+#         self.get_response = get_response
+#         # One-time configuration and initialization.
 
-    def get_course(self, request):
-        """
-        Returns an organization matching the domain from the request host. Only returns
-        the organization if the authenticated user is in the list of members for that
-        broker. Otherwise, returns a 404.
-        """
-        org = None
+#     def get_course(self, request):
+#         """
+#         Returns an organization matching the domain from the request host. Only returns
+#         the organization if the authenticated user is in the list of members for that
+#         broker. Otherwise, returns a 404.
+#         """
+#         org = None
 
-        if 'HTTP_HOST' in request.META:
-            key = f'{request.META["HTTP_HOST"]}_org_object'
-            org = cache.get(key)
-            if not org:
-                namespace = Course.get_domain_from_request_host(request.META['HTTP_HOST'])
-                org = (
-                    Course.objects.filter(namespace=namespace)
-                    .prefetch_related('owner', 'owner__user')
-                    .first()
-                )
-                #cache.set(key, org, 60 * 60 * 24)
-        return org
+#         if 'HTTP_HOST' in request.META:
+#             key = f'{request.META["HTTP_HOST"]}_org_object'
+#             org = cache.get(key)
+#             if not org:
+#                 namespace = Course.get_domain_from_request_host(request.META['HTTP_HOST'])
+#                 org = (
+#                     Course.objects.filter(namespace=namespace)
+#                     .prefetch_related('owner', 'owner__user')
+#                     .first()
+#                 )
+#                 #cache.set(key, org, 60 * 60 * 24)
+#         return org
 
-    def get_location(self, request):
-        """
-        Returns an organization matching the domain from the request host. Only returns
-        the organization if the authenticated user is in the list of members for that
-        broker. Otherwise, returns a 404.
-        """
-        location = None
-        namespace = None
+#     def get_location(self, request):
+#         """
+#         Returns an organization matching the domain from the request host. Only returns
+#         the organization if the authenticated user is in the list of members for that
+#         broker. Otherwise, returns a 404.
+#         """
+#         location = None
+#         namespace = None
 
-        if 'HTTP_HOST' in request.META:
-            if 'OUR-LOCATION' in request.headers:
-                namespace = request.headers['OUR-LOCATION']
-                try:
-                    location = Assignment.objects.get(namespace=namespace)
-                except Assignment.DoesNotExist:
-                    pass
-        return location
+#         if 'HTTP_HOST' in request.META:
+#             if 'OUR-LOCATION' in request.headers:
+#                 namespace = request.headers['OUR-LOCATION']
+#                 try:
+#                     location = Assignment.objects.get(namespace=namespace)
+#                 except Assignment.DoesNotExist:
+#                     pass
+#         return location
 
-    def __call__(self, request, *args, **kwargs):
-        # request.user = SimpleLazyObject(lambda: self.get_jwt_user(request))
-        # header_token = request.META.get('HTTP_AUTHORIZATION', None)
-        # if header_token:
-        #     try:
-        #         token = sub('Token ', '', request.META.get('HTTP_AUTHORIZATION', None))
-        #         token_obj = Token.objects.get(key=token)
-        #         request.user = token_obj.user
-        #
-        #     except Token.DoesNotExist:
-        #         pass
+#     def __call__(self, request, *args, **kwargs):
+#         # request.user = SimpleLazyObject(lambda: self.get_jwt_user(request))
+#         # header_token = request.META.get('HTTP_AUTHORIZATION', None)
+#         # if header_token:
+#         #     try:
+#         #         token = sub('Token ', '', request.META.get('HTTP_AUTHORIZATION', None))
+#         #         token_obj = Token.objects.get(key=token)
+#         #         request.user = token_obj.user
+#         #
+#         #     except Token.DoesNotExist:
+#         #         pass
 
-        # set the site into the request for use in the project views
-        request.org = self.get_course(request)
-        request.location = self.get_location(request)
-        response = self.get_response(request)
-        return response
+#         # set the site into the request for use in the project views
+#         request.org = self.get_course(request)
+#         request.location = self.get_location(request)
+#         response = self.get_response(request)
+#         return response
 

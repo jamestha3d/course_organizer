@@ -35,9 +35,6 @@ class AssignmentView(viewsets.ModelViewSet):
     filter_fields = '__all__'
     lookup_field = 'guid'
 
-    # def get_queryset(self):
-    #     queryset = self.queryset
-    #     return queryset
     @action(
         detail=False,
         methods=['GET',],
@@ -54,12 +51,6 @@ class CourseView(viewsets.ModelViewSet):
     filter_fields = '__all__'
     lookup_field = 'guid'
 
-    # def get_queryset(self, *args, **kwargs):
-    #     queryset = self.queryset.all() if self.request.user.is_superuser else self.queryset.filter(author=self.request.user)
-    #     return queryset
-
-    # def list(self, request):
-    #     return Response()
     @action(
         detail=False,
         methods=['GET',],
@@ -67,8 +58,6 @@ class CourseView(viewsets.ModelViewSet):
         # url_path="tags/(?P<tagname>[^/.]+)",
     )
     def mycourses(self, request):
-        # user_courses = request.user.get_courses()
-        # user_sessions = Session.objects.filter(user=user)
         user_classrooms = Classroom.objects.filter(students__user=request.user).distinct().values_list('courses', flat=True)
         user_courses = Course.objects.filter(guid__in=user_classrooms)
         pages = self.paginate_queryset(user_courses)
@@ -79,16 +68,13 @@ class CourseView(viewsets.ModelViewSet):
         else:
             serializer = CourseSerializer(pages, many=True)
             return Response(serializer.data)
+        
 class ClassroomView(viewsets.ModelViewSet):
     permission_classes = []
     serializer_class = ClassroomSerializer
     queryset = Classroom.objects.all()
     filter_fields = '__all__'
     lookup_field = 'guid'
-
-    # def get_queryset(self):
-    #     queryset = self.queryset
-    #     return queryset
 
     
     
@@ -99,25 +85,12 @@ class ProfileView(viewsets.ModelViewSet):
     filter_fields = '__all__'
     lookup_field = 'guid'
 
-    # def get_queryset(self):
-    #     queryset = self.queryset
-    #     return queryset
-
-    # def mycourses(self, request, guid=None):
-    #     user = self.get_object().user
-    #     courses = Course.objects.all()[0:5]
-    #     return Response(CourseSerializer(courses).data)
-
 class PostView(viewsets.ModelViewSet):
     permission_classes = []
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     filter_fields = '__all__'
     lookup_field = 'guid'
-
-    # def get_queryset(self):
-    #     queryset = self.queryset
-    #     return queryset
     
 class PostCommentView(viewsets.ModelViewSet):
     permission_classes = []
@@ -126,9 +99,6 @@ class PostCommentView(viewsets.ModelViewSet):
     filter_fields = '__all__'
     lookup_field = 'guid'
 
-    # def get_queryset(self):
-    #     queryset = self.queryset
-    #     return queryset
     
 class LessonView(viewsets.ModelViewSet):
     permission_classes = []
@@ -136,10 +106,6 @@ class LessonView(viewsets.ModelViewSet):
     queryset = Lesson.objects.all()
     filter_fields = '__all__'
     lookup_field = 'guid'
-
-    # def get_queryset(self):
-    #     queryset = self.queryset
-    #     return queryset
 
 
 class ClassroomView(viewsets.ModelViewSet):

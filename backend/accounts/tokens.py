@@ -3,13 +3,15 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import six  
 from django.utils import timezone
-from datetime import timedelta
+from datetime import datetime, timedelta
 from django.conf import settings
+from django.utils.http import base36_to_int, int_to_base36
+from django.utils.crypto import constant_time_compare
 
-TOKEN_VALIDITY_PERIOD = settings.ACTIVATION_TOKEN_EXPIRE_HOURS or 24
+TOKEN_VALIDITY_PERIOD = settings.ACTIVATION_TOKEN_EXPIRE_HOURS or 48 * 3600
 User = get_user_model()
 
-def create_jwt_pair_for_user(user: User):
+def create_jwt_pair_for_user(user: User): # type: ignore
     refresh = RefreshToken.for_user(user)
 
     tokens={
@@ -21,28 +23,22 @@ def create_jwt_pair_for_user(user: User):
 
 class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
-        expiration_time = timezone.now() + timedelta(hours=TOKEN_VALIDITY_PERIOD)
         return (
-            six.text_type(user.pk) + six.text_type(timestamp)  + six.text_type(user.is_active) + six.text_type(expiration_time)
+            six.text_type(user.pk) + six.text_type(timestamp)  + six.text_type(user.is_activated)
+        )
+    
+account_activation_token = AccountActivationTokenGenerator()
+
+
+class LoginTokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return (
+            six.text_type(user.pk) + six.text_type(timestamp) +
+            six.text_type(user.last_login)
         )
 
+login_token_generator = LoginTokenGenerator()
 
-    def check_token(self, user, token):
-        try:
-            # Check if the token is expired
-            if self._get_token_timestamp(token) < timezone.now() - timedelta(hours=TOKEN_VALIDITY_PERIOD):
-                return False
-            return super().check_token(user, token)
-        except Exception:
-            return False
-
-    def _get_token_timestamp(self, token):
-        # Extract timestamp from token
-        # This is a simplified example; you need to properly parse your token
-        return timezone.datetime.strptime(token.split(":")[1], "%Y-%m-%d %H:%M:%S")
-    
-
-account_activation_token = AccountActivationTokenGenerator()
 
 # account_activation_token.check_token(user, token)
 # account_activation_token.make_token(user)

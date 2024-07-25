@@ -6,6 +6,10 @@ from utils.utils import get_object_or_None
 import random
 import string
 from django.template.loader import render_to_string #render template to string
+from accounts.tokens import account_activation_token, login_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.urls import reverse
 
 def EmailReplace(template, key_dict:dict):
     key_list = list(key_dict.keys())
@@ -72,8 +76,10 @@ def MatchKeyGenerator(length):
 
 
 def welcome_email(user, ):
+    token = account_activation_token.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
     mail_subject = "Activate Your user account."
-    activation_link = f"http://127.0.0.1:3000/activate/user/{user.email}"
+    activation_link = f"http://127.0.0.1:3000/activate/{uid}/{token}"
     message = render_to_string("emails/template_welcome_user.html", {
         "user": user.email,
         "activation_link": activation_link
@@ -86,8 +92,21 @@ def welcome_email(user, ):
         [user.email],
         html_message=message,
         fail_silently=False)
-        # return True
+        return True
     except SMTPException as e:
         print(str(e))
+        return False
     except Exception as e:
         print(str(e))
+        return False
+    
+
+def send_login_link(user):
+    token = login_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    login_link = reverse('login-link', kwargs={'uidb64': uid, 'token': token})
+    login_url = f"{settings.SITE_URL}{login_link}"
+
+    subject = "Your Login Link"
+    message = f"Hi {user.username},\n\nClick the link below to log in:\n\n{login_url}\n\nThis link will expire in 24 hours."
+    send_mail(subject, None, settings.DEFAULT_FROM_EMAIL, [user.email], html_message=message)

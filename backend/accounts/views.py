@@ -10,13 +10,17 @@ from .tokens import create_jwt_pair_for_user
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth import get_user_model
-from .tokens import account_activation_token
+from .tokens import account_activation_token, login_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, EmailMessage
 from emails.utils import welcome_email
+from django.contrib.auth import login
+from django.shortcuts import redirect
 # Create your views here.
 
+
+User = get_user_model()
 class SignUpView(generics.GenericAPIView):
     serializer_class = SignUpSerializer
     permission_classes = []
@@ -73,23 +77,31 @@ class LoginView(APIView):
 
         return Response(data=content, status=status.HTTP_200_OK)
     
+    @staticmethod
+    def login_user(user, message="Login Successful"):
+        tokens=create_jwt_pair_for_user(user)
+        response={
+            "message": message,
+            "token": tokens, #user.auth_token.key old token method,
+            "user": {
+                "email": user.email,
+                "activated": user.is_activated
+            }
+
+        }
+        return response
+        # return Response(data=response, status=status.HTTP_200_OK)
+
+    
 
 class SendActivationEmailView(APIView):
-    def post(user, request):
-        token = account_activation_token.make_token(user)
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        domain = get_current_site(request).domain
-        protocol = request.scheme #'https' if request.is_secure() else 'http' 
-        activation_link = f"{protocol}://{domain}/activate/{uid}/{token}/"
-
-        subject = 'Activate Your Account'
-        message = render_to_string('emails/template_welcome_user.html', {
-            'user': user,
-            'activation_link': activation_link,
-        })
-        email = EmailMessage(subject, message, to=[user.email])
-        email.send()
-        return Response({'message': 'Activation link sent'})
+    def post(self, request):
+        user = request.user
+        email_sent = welcome_email(user)
+        if email_sent:
+            return Response({'message': 'Activation link sent'})
+        else:
+            Response({'error': 'Could not send activation link '})
     
 class ActivationView(APIView):
     permission_classes = []
@@ -97,18 +109,67 @@ class ActivationView(APIView):
         '''
             This view will activate newly signed up userss
         '''
-        User = get_user_model()
+        # User = get_user_model()
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
+            print(user)
         except:
             user = None
 
         if user is not None and account_activation_token.check_token(user, token):
             user.is_activated = True
             user.save()
-            return Response()
-        else:
-            return Response('Activation link is invalid or expired!')
-        
+            tokens=create_jwt_pair_for_user(user)
+            response={
+                "message": "Activation Successful",
+                "token": tokens,
+                "user": {
+                    "email": user.email,
+                    "activated": user.is_activated
+                }
 
+            }
+            return Response(data=response, status=status.HTTP_200_OK)
+ 
+        else:
+            print('invalid user')
+            return Response({'error': 'Activation link is invalid or expired!'}, status=status.HTTP_400_BAD_REQUEST)
+        
+def login_link_view(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and login_token_generator.check_token(user, token):
+        login(request, user)
+        # Redirect to the React app's main page or another appropriate URL
+        return redirect('/react-app-url/')
+    else:
+        # Handle invalid or expired token
+        return redirect('/invalid-link/')
+
+class SingleSignOnView(APIView):
+    def post(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and login_token_generator.check_token(user, token):
+            tokens=create_jwt_pair_for_user(user)
+            response={
+                "message": "Login Successful",
+                "token": tokens, #user.auth_token.key old token method,
+                "user": {
+                    "email": user.email,
+                    "activated": user.is_activated
+                }
+
+            }
+            return Response(data=response, status=status.HTTP_200_OK)
+        else:
+            return Response(data={"errors": "Single Sign On link is invalid or expired!"}, status=status.HTTP_400_BAD_REQUEST)

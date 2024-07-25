@@ -69,7 +69,7 @@ function App() {
           <Route path="/classrooms/all" element={user? <AllClassrooms /> : <Navigate to="/login" />} />
           <Route path="/classrooms/:guid" element={user ? <ClassroomDetail /> : <Navigate to="/login" />} /> */}
           <Route path="/activate" element={user ? (!user.user.activated ? <ActivateAccountWarning/> : <Navigate to="/" />) : <Navigate to="/login" />} />
-          <Route path="/activate/:uid64/:token" element={user ? (user.user.activated ? <ActivateAccount/> : <Navigate to="/" />): <Navigate to="/login" />} />
+          <Route path="/activate/:uid64/:token" element={user ? (!user.user.activated ? <ActivateAccount/> : <Navigate to="/" />): <ActivateAccount/>} />
           <Route element={<PrivateRoutes/>}>
             <Route path='/' element={user ? (user.user.activated ? <Home /> : <Navigate to="/activate"/>) : <Navigate to="/login" />}/>
             <Route path="/courses" element={<Courses/>} />

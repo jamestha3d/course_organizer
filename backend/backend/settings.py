@@ -88,7 +88,7 @@ INSTALLED_APPS = [
     "emails",
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://192.168.2.15:3000', 'http://localhost:3000'] #'http://localhost:5173', #2
+CORS_ALLOWED_ORIGINS = ['http://192.168.2.15:3000', 'http://localhost:3000', 'http://127.0.0.1:3000'] #'http://localhost:5173', #2
 
 AUTH_USER_MODEL = "accounts.User" #specify custom user model
 MIDDLEWARE = [
@@ -116,7 +116,8 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "PAGE_SIZE": 100 
+    "PAGE_SIZE": 100,
+    "EXCEPTION_HANDLER": "utils.exceptions.custom_exception_handler"
 }
 
 SIMPLE_JWT= {
@@ -208,8 +209,8 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
-
-ACTIVATION_TOKEN_EXPIRE_HOURS = 24
+PASSWORD_RESET_TIMEOUT =  2 * 24 * 3600
+ACTIVATION_TOKEN_EXPIRE_HOURS = 48 * 3600
 try:
     from .local_settings import *
 except ImportError:
