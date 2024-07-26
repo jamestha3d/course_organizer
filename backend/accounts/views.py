@@ -146,10 +146,10 @@ def login_link_view(request, uidb64, token):
     if user is not None and login_token_generator.check_token(user, token):
         login(request, user)
         # Redirect to the React app's main page or another appropriate URL
-        return redirect('/react-app-url/')
+        return redirect('login/')
     else:
         # Handle invalid or expired token
-        return redirect('/invalid-link/')
+        return redirect('login/')
 
 class SingleSignOnView(APIView):
     def post(self, request, uidb64, token):

@@ -28,6 +28,7 @@ import CourseDetail from './pages/CourseDetail';
 import ActivateAccountWarning from './pages/ActivateAccountWarning';
 import ActivateAccount from './pages/ActivateAccount';
 import { useNavigate } from 'react-router-dom';
+import CreateClassroom from './pages/CreateClassroom';
 function App() {
   const { token, setToken } = useToken();
 
@@ -79,6 +80,7 @@ function App() {
             <Route path="/teach" element={<Teach/>} />
             <Route path="/create/course" element={<CreateCourse/>} />
             <Route path="/create/lesson" element={<CreateLesson/>} />
+            <Route path="/create/classroom" element={<CreateClassroom/>} />
             <Route path="/courses/:guid" element={<CourseDetail/>} />
             <Route path="/dashboard" element={<Dashboard /> } />
             <Route path="/create" element={<Create />}  />

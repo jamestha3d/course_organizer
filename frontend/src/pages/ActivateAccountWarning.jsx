@@ -32,6 +32,10 @@ const ActivateAccountWarning = () => {
             }
     }, 1000);
     }
+
+    // TODO: issues with this view.
+    //when there is a user, react router just ignores the link and takes you to the user. maybe i want to log the user out.
+
     return ( <Container>
     <h1>Activate Account</h1>
     <p>You shall not pass! 😛</p>
