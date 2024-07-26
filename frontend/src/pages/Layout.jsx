@@ -30,7 +30,8 @@ const Layout = ({ children }) => {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="/dashboard">Dashboard</Nav.Link>
+            {user && 
+            <><Nav.Link href="/dashboard">Dashboard</Nav.Link>
             <Nav.Link href="/teach">Teach</Nav.Link>
             <NavDropdown title="Learning" id="navbarScrollingDropdown">
               <NavDropdown.Item href="/courses">My courses</NavDropdown.Item>
@@ -47,9 +48,9 @@ const Layout = ({ children }) => {
             </Nav.Link>
             <Nav.Link href="/discussions">
               Discussions
-            </Nav.Link>
+            </Nav.Link> </>}
           </Nav>
-          <Nav.Link href="/notifications" disabled><FaIcons.FaBell/></Nav.Link>
+          { user && <><Nav.Link href="/notifications" disabled><FaIcons.FaBell/></Nav.Link>
           
           <Form className="d-flex">
             <Form.Control
@@ -59,7 +60,7 @@ const Layout = ({ children }) => {
               aria-label="Search"
             />
             <Button variant="outline-success">Search</Button>
-          </Form>
+          </Form> </>}
           
           {user ? (
              <NavDropdown title="Me" id="navbarScrollingDropdown">
