@@ -46,6 +46,9 @@ const ActivateAccount = () => {
 
     }, [])
 
+    return () => {
+        setError(null) //added clean up function to prevent wrong errors??
+    }
     return ( 
         error ? 
         <Container> 
