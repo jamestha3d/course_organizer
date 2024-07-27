@@ -12,16 +12,12 @@ const ActivateAccount = () => {
     const [redirecting, setRedirecting] = useState(null);
     const {uid64, token} = useParams();
     const { user, dispatch } = UseAuthContext()
+    const [alreadyfired, setAlreadyFired] = useState(false)
     const activateUser = async (uid64, token) => {
         const response = await postApi(`auth/activate/${uid64}/${token}/`)
         //const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
         setIsLoading(false)
-        if (response.data.error){
-            //inform user of this error
-            const error = response.data.error
-            setError(error)
-        }
-        else if (response.status == 200){
+        if (response.status == 200){
             setActivated(true)
             //wait 3 seconds and redirect.
             //await delay (3000)
@@ -30,24 +26,36 @@ const ActivateAccount = () => {
                 localStorage.setItem('user', JSON.stringify(json))
                 dispatch({ type: 'LOGIN', payload: json })
             }, 3000);
-            
+            setAlreadyFired(true)
 
-        } else {
+        } else if (response.data.error && !alreadyfired){
+            //inform user of this error
+            const error = response.data.error
+            setError(error)
+        }
+        else {
             //give error message
             setError(response.error)
         }
 
-        return () => {
-            setError(null) //added clean up function to prevent wrong errors??
-        }
+        // return () => {
+        //     setError(null) //added clean up function to prevent wrong errors??
+        // }
         
     }
-    activateUser(uid64, token)
-    // useEffect( ()=> {
-    //     //activate account
-    //     activateUser(uid64, token)
-
-    // }, [])
+    //activateUser(uid64, token)
+    useEffect( ()=> {
+        //activate account
+        if (!alreadyfired){
+            activateUser(uid64, token)
+        }
+        setAlreadyFired(true)
+        return (() => {
+            setError(null)
+            setAlreadyFired(true)
+        })
+        
+    }, [])
 
     return ( 
         error ? 

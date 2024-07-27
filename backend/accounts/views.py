@@ -130,6 +130,7 @@ class ActivationView(APIView):
                 }
 
             }
+            print('valid user')
             return Response(data=response, status=status.HTTP_200_OK)
  
         else:
