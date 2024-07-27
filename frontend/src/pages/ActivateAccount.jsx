@@ -11,8 +11,7 @@ const ActivateAccount = () => {
     const [error, setError] = useState(null);
     const [redirecting, setRedirecting] = useState(null);
     const {uid64, token} = useParams();
-    const { dispatch } = UseAuthContext()
-
+    const { user, dispatch } = UseAuthContext()
     const activateUser = async (uid64, token) => {
         const response = await postApi(`auth/activate/${uid64}/${token}/`)
         //const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -37,18 +36,19 @@ const ActivateAccount = () => {
             //give error message
             setError(response.error)
         }
+
+        return () => {
+            setError(null) //added clean up function to prevent wrong errors??
+        }
         
     }
-    
-    useEffect( ()=> {
-        //activate account
-        activateUser(uid64, token)
+    activateUser(uid64, token)
+    // useEffect( ()=> {
+    //     //activate account
+    //     activateUser(uid64, token)
 
-    }, [])
+    // }, [])
 
-    return () => {
-        setError(null) //added clean up function to prevent wrong errors??
-    }
     return ( 
         error ? 
         <Container> 

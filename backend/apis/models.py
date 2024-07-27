@@ -62,7 +62,7 @@ class Course(GUIDModel):
     namespace = AutoSlugField(populate_from='title', blank=True, null=True, editable=True, always_update=False)
     description = models.TextField(null=True)
     instructors = models.ManyToManyField('Profile', related_name='courses_teaching')
-
+    #is_active = models.BooleanField(default=True) #When a course is active you can can create new lessons. if it is inactive no lessons can be created.
     def add_instructor(self, instructor:'Profile'):
         if instructor.role != Profile.ROLES.INSTRUCTOR:
             raise Exception('Cannot add Non Instructor as instructor')
@@ -189,6 +189,9 @@ class Lesson(GUIDModel):
     # TODO ??add a is_recurring field to track whether the meeting is recurring or not??. maybe i should abstract meeting link to its own Model, where meeting link.
     #track attendance
     # abstracting meeting into it's own model makes sense because Potentially we can make a lesson that is just Notes and No meeting at all.
+
+
+    # On lesson creation...
     
 class Meeting(GUIDModel): #Maybe called Meeting/Lecture
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='meeting')
@@ -198,6 +201,7 @@ class Meeting(GUIDModel): #Maybe called Meeting/Lecture
     one_hour = datetime.time(1,0,0)
     duration = models.TimeField(default=one_hour, null=True)
     is_recurring = models.BooleanField(default=False)
+    transcript = models.TextField()
     description = models.TextField()
 
     #if meeting is recurring, override the create method and when you save the meeting, if the Classroom that the meeting belongs to has not ended, then it should create the next lesson.
@@ -226,3 +230,10 @@ class LessonNote(GUIDModel):
     title = models.CharField(max_length= 20)
     body = models.TextField()
     author = models.ForeignKey('Profile', on_delete=models.SET_NULL, null=True)
+
+
+# When a classroom is created, courses can be added. registration link can be shared with students for them to sign up for the class. When the first lesson is created/ with meeting.
+#(#students should choose whether or not to receive email notifications)
+#When lesson is created. we want to send an email with it's meeting link to students.
+#if the meeting is recurring. we want to send an email for next meeting link??? Do this later?
+#User can set notifications for things like receive notification when video is uploaded. when lesson is created. etc. 
