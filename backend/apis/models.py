@@ -180,22 +180,34 @@ class Profile(GUIDModel):
     
 class Lesson(GUIDModel):
     title = models.CharField(max_length=256)
+    index = models.PositiveIntegerField() #editable=False?. I probably don't need index at all because i can sort by Date Created.
     course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='lessons')
-    video_link = models.URLField(null=True)
-    meeting_link = models.URLField(null=True)
-    start_time = models.DateTimeField(null=True)
-    one_hour = datetime.time(1,0,0)
-    duration = models.TimeField(default=one_hour, null=True)
     notes = models.ForeignKey('LessonNote', on_delete=models.CASCADE, null=True)
     description = models.TextField()
-    instructor = models.ManyToManyField(Profile, related_name='lessons', through='LessonInstructor', through_fields=('lesson', 'instructor'))
+    # instructor = models.ManyToManyField(Profile, related_name='lessons', through='LessonInstructor', through_fields=('lesson', 'instructor')) #This field should be on the course not the lesson.
     assignments = models.ManyToManyField(Assignment, related_name='assignments' )
+    # TODO ??add a is_recurring field to track whether the meeting is recurring or not??. maybe i should abstract meeting link to its own Model, where meeting link.
     #track attendance
+    # abstracting meeting into it's own model makes sense because Potentially we can make a lesson that is just Notes and No meeting at all.
+    
+class Meeting(GUIDModel): #Maybe called Meeting/Lecture
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='meeting')
+    recording_upload = models.URLField(null=True)
+    meeting_link = models.URLField(null=True)
+    start_time = models.DateTimeField(null=True) #this should record only start time and not day. so that if the meeting is recurring it will always recurr at the exact time and we can calculate date by adding 7 to previous meeting day?
+    one_hour = datetime.time(1,0,0)
+    duration = models.TimeField(default=one_hour, null=True)
+    is_recurring = models.BooleanField(default=False)
+    description = models.TextField()
 
-class LessonInstructor(GUIDModel):
-    lesson = models.ForeignKey('Lesson', on_delete=models.CASCADE)
-    instructor = models.ForeignKey('Profile', on_delete=models.CASCADE)
-    lead = models.BooleanField()
+    #if meeting is recurring, override the create method and when you save the meeting, if the Classroom that the meeting belongs to has not ended, then it should create the next lesson.
+    #will need to manage creation of next meeting link and mailing reminder to students. maybe with a cron job.
+
+# Don't need this.
+# class LessonInstructor(GUIDModel):
+#     lesson = models.ForeignKey('Lesson', on_delete=models.CASCADE)
+#     instructor = models.ForeignKey('Profile', on_delete=models.CASCADE)
+#     lead = models.BooleanField()
 
 class Playlist(GUIDModel):
     title = models.CharField(max_length=256)

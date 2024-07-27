@@ -1,10 +1,11 @@
 #create user profile after user sign up
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from accounts.models import User
-from .models import Profile
+from .models import Profile, Lesson
 from emails.utils import email_user
+from django.db.models import Max
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
@@ -20,3 +21,9 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
             }
         )
     instance.profile.save()
+
+@receiver(pre_save, sender=Lesson)
+def set_sort_number(sender, instance, **kwargs):
+    if not instance.index:
+        max_index = Lesson.objects.filter(course=instance.course).aggregate(Max('index'))['index__max']
+        instance.index = (max_index or 0) + 1

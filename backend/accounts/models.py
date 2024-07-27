@@ -25,11 +25,11 @@ class CustomUserManager(BaseUserManager):
 class User(AbstractUser):
     email=models.CharField(max_length=80, unique=True) #models.EmailField() maybe?
     username=models.CharField(max_length=45, null=True)
-    date_of_birth=models.DateField(null=True)
+    #date_of_birth=models.DateField(null=True) #don't need this.
     is_activated = models.BooleanField(default=False)
     objects=CustomUserManager()
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = [] #['username']
+    REQUIRED_FIELDS = [] #['username', 'first_name'] #['username']
 
     def __str__(self):
         return str(self.email)

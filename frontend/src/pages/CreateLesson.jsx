@@ -27,6 +27,7 @@ const CreateLesson = () => {
                 </Form.Text>
             </Form.Group>
 
+            <span> This lesson will have a meeting at the following time(s)</span>
             <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Start Date</Form.Label>
                 <Form.Control type="date" placeholder="Enter Classsroom Title" />
@@ -50,8 +51,9 @@ const CreateLesson = () => {
                 </Form.Text>
             </Form.Group>
            
+           Better still i want to make the recurring field a single select radio button with options such as weekly, bi-weekly, monthly, quarterly,
             <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                <Form.Check type="checkbox" label="Private Classroom" />
+                <Form.Check type="checkbox" label="Is recurring..[If the user clicks this a pop up box to select frequency should come up]" />
             </Form.Group>
             <Button variant="primary" type="submit">
                 Submit

@@ -1,13 +1,15 @@
 import { Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { postApiUser } from "../api";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { UseAuthContext } from "../hooks/useAuthContext";
-
+import { ToastContainer, toast} from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const ActivateAccountWarning = () => {
     const [hasToWait, setHasToWait] = useState(false)
     const countdownRef = useRef(null);
-    const {user} = UseAuthContext()
+    const {user} = UseAuthContext();
+    // const [activated, setActivated] = useState(user.user.activated)
     const sendActivation = async () => {
         setHasToWait(true)
         await postApiUser(`auth/send_activation/`)
@@ -33,6 +35,26 @@ const ActivateAccountWarning = () => {
     }, 1000);
     }
 
+    // TODO: will work on this later. not needed rn 
+    // const navigate = useNavigate()
+    // useEffect( ()=> {
+    //     //page should reload when user activation changes
+    //     //Toast user that they have successfully activated
+    //     if (user.user.activated){
+    //         toast.success("Account activated")
+    //         setTimeout(() => {
+    //         }, 2000);
+    //         if (user.user.activated) {
+    //             navigate('/')
+    //         }
+    //     }
+    //     // setActivated(true)
+        
+
+    // }, [user.user.activated]) //user does not change.
+
+    
+    
     // TODO: issues with this view.
     //when there is a user, react router just ignores the link and takes you to the user. maybe i want to log the user out.
 
@@ -46,7 +68,7 @@ const ActivateAccountWarning = () => {
         <p>Activation Link has been sent to your email. Please wait 1 minute before retrying.</p>
         <p><span ref={countdownRef}></span></p>
     </div>
-
+    <ToastContainer/>
     </Container> );
 }
  
