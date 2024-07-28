@@ -9,7 +9,6 @@ const ActivateAccount = () => {
     const [activated, setActivated] = useState(false);
     const [loading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [redirecting, setRedirecting] = useState(null);
     const {uid64, token} = useParams();
     const { user, dispatch } = UseAuthContext()
     const [alreadyfired, setAlreadyFired] = useState(false)
@@ -19,6 +18,7 @@ const ActivateAccount = () => {
         setIsLoading(false)
         if (response.status == 200){
             setActivated(true)
+            // setAlreadyFired(true)
             //wait 3 seconds and redirect.
             //await delay (3000)
             setTimeout(() => {
@@ -26,9 +26,9 @@ const ActivateAccount = () => {
                 localStorage.setItem('user', JSON.stringify(json))
                 dispatch({ type: 'LOGIN', payload: json })
             }, 3000);
-            setAlreadyFired(true)
+            
 
-        } else if (response.data.error && !alreadyfired){
+        } else if (!alreadyfired && response.data.error ){
             //inform user of this error
             const error = response.data.error
             setError(error)
@@ -37,10 +37,6 @@ const ActivateAccount = () => {
             //give error message
             setError(response.error)
         }
-
-        // return () => {
-        //     setError(null) //added clean up function to prevent wrong errors??
-        // }
         
     }
     //activateUser(uid64, token)
@@ -49,7 +45,7 @@ const ActivateAccount = () => {
         if (!alreadyfired){
             activateUser(uid64, token)
         }
-        setAlreadyFired(true)
+        // setAlreadyFired(true)
         return (() => {
             setError(null)
             setAlreadyFired(true)

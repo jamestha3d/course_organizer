@@ -31,8 +31,8 @@ class ApiMiddleware:
 
     def __call__(self, request):
         print('call to api')
-        if request.user and not request.user.is_anonymous and request.user.is_authenticated and not request.user.is_activated:
-            allowed_paths = [reverse('login'), reverse('activate'), reverse('send_activation')]
+        if request.user and not request.user.is_anonymous and request.user.is_authenticated and not request.user.is_activated and not request.user.is_superuser:
+            allowed_paths = [reverse('login'), reverse('activate'), reverse('send_activation')] #fix bug for reverse path activate without params
             if request.path not in allowed_paths:
                 return redirect('activate')
             return Response({'message': 'User for like activated e account'})

@@ -174,3 +174,4 @@ class SingleSignOnView(APIView):
             return Response(data=response, status=status.HTTP_200_OK)
         else:
             return Response(data={"errors": "Single Sign On link is invalid or expired!"}, status=status.HTTP_400_BAD_REQUEST)
+        

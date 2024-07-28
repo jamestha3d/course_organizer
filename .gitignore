@@ -39,8 +39,5 @@ frontend/coverage
 script.py
 
 local_settings.py
-credentials.json
-credentials_2.json
-client_secret.json
-client_secret2.json
+backend/apis/*.json
 token.json

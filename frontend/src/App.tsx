@@ -29,6 +29,7 @@ import ActivateAccountWarning from './pages/ActivateAccountWarning';
 import ActivateAccount from './pages/ActivateAccount';
 import { useNavigate } from 'react-router-dom';
 import CreateClassroom from './pages/CreateClassroom';
+import CreateInstructorProfile from './pages/CreateInstructorProfile';
 function App() {
   const { token, setToken } = useToken();
 
@@ -87,9 +88,10 @@ function App() {
             <Route path="/courses/all" element={<AllCourses />} />
             <Route path="/classrooms/all" element={<AllClassrooms /> } />
             <Route path="/classrooms/:guid" element={<ClassroomDetail /> } />
-            
+            <Route path="/become-instructor" element={<CreateInstructorProfile/> } />
+            {/* <Route path="/" element={}/> */}
           </Route>
-          {/* This is an experimental feature so using for /courses only */}
+          {/* This is an experimental feature so using for /courses only localhost:3000/oauth2 */}
           
           <Route path="*" element={<NotFound />} />
         </Routes>
