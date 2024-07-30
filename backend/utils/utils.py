@@ -4,3 +4,5 @@ def get_object_or_None(model, **kwargs):
         return item
     except model.DoesNotExist:
         return None
+    except: #except returns multiple objects
+        return None

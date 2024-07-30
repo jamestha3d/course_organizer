@@ -11,15 +11,22 @@ const CreateInstructorProfile = () => {
         const response = await postApiUser(`api/oauth2init/`)
 
         if (response.status === 200) {
-            window.location.href = response.data.auth_url
-            // const width = 600;
-            // const height = 800;
-            // const left = (window.screen.width / 2) - (width / 2);
-            // const top = (window.screen.height / 2) - (height / 2);
+            const jwt_token = response.data.state_token
+            localStorage.setItem('google_oauth_state_token', jwt_token)
+            //window.location.href = response.data.auth_url
+            const width = 600;
+            const height = 800;
+            const left = (window.screen.width / 2) - (width / 2);
+            const top = (window.screen.height / 2) - (height / 2);
 
-            // window.open(authUrl, 'GoogleAuth', `width=${width},height=${height},top=${top},left=${left}`);
+            window.open(response.data.auth_url, 'GoogleAuth', `width=${width},height=${height},top=${top},left=${left}`);
 
             }
+
+    // useEffect(()=> {
+    //     const urlParams = new URLSearchParams(window.location.search);
+    //     const token = urlParams.get('token');
+    // })
     }
     return ( <Container>
         <h1>Create an instructor Profile</h1>

@@ -200,7 +200,7 @@ class Meeting(GUIDModel): #Maybe called Meeting/Lecture
     start_time = models.DateTimeField(null=True) #this should record only start time and not day. so that if the meeting is recurring it will always recurr at the exact time and we can calculate date by adding 7 to previous meeting day?
     one_hour = datetime.time(1,0,0)
     duration = models.TimeField(default=one_hour, null=True)
-    is_recurring = models.BooleanField(default=False)
+    is_recurring = models.BooleanField(default=False) # ????
     transcript = models.TextField()
     description = models.TextField()
 

@@ -33,12 +33,12 @@ def authorize(request):
 
     return redirect(authorization_url_with_jwt)
 
-    print(state)
+    # print(state)
 
-    return redirect(authorization_url)
+    # return redirect(authorization_url)
 
 def oauth2callback(request):
-    state = request.session['state']
+    state = request.GET.get('state')
 
     flow = Flow.from_client_secrets_file(
         GOOGLE_OAUTH2_CLIENT_SECRETS_FILE, scopes=GOOGLE_OAUTH2_SCOPES, state=state)
@@ -50,6 +50,7 @@ def oauth2callback(request):
     credentials = flow.credentials
     request.session['credentials'] = credentials_to_dict(credentials)
 
+    # return Response()
     return redirect(reverse('index'))
 
 def credentials_to_dict(credentials):

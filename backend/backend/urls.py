@@ -16,12 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from apis import chat_gpt as views
+from apis.o_auth import OAuth2CallbackView
+from apis.chat_gpt import authorize
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apis.urls")),
     path("auth/", include("accounts.urls")),
     path("emails/", include("emails.urls")),
-    path('authorize/', views.authorize, name='authorize'),
-    path('oauth2callback/', views.oauth2callback, name='oauth2callback'),
+    # path('authorize/', authorize, name='authorize'),
+    path('oauth2callback/', OAuth2CallbackView.as_view(), name='oauth2callback'),
 ]

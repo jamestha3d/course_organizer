@@ -13,13 +13,13 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
         #email user
         # Quick email user welcome. Commented out because it delays sign up. should be moved to profile creation signal/ remove wait to confirm if email was sent. 
-        email_user(
-            instance, {
-                "title": "Welcome To CourseConnect",
-                "message": f"Your account {instance.email} was successfully created. Please click on the link below to confirm Your account. If you did not initiate this request, Please ignore the email.",
-                "emails": [instance.email]
-            }
-        )
+        # email_user(
+        #     instance, {
+        #         "title": "Welcome To CourseConnect",
+        #         "message": f"Your account {instance.email} was successfully created. Please click on the link below to confirm Your account. If you did not initiate this request, Please ignore the email.",
+        #         "emails": [instance.email]
+        #     }
+        # )
     instance.profile.save()
 
 @receiver(pre_save, sender=Lesson)
