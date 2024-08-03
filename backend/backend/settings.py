@@ -66,8 +66,6 @@ ALLOWED_HOSTS = []
 #     'dnt',
 #     'origin',
 #     'user-agent',
-#     'Oto-Org',
-#     'Oto-Location',
 #     'x-csrftoken',
 #     'x-requested-with',
 # )
@@ -88,6 +86,7 @@ INSTALLED_APPS = [
     "emails",
 ]
 
+FRONT_END_URL = 'http://localhost:3000'
 CORS_ALLOWED_ORIGINS = ['http://192.168.2.15:3000', 'http://localhost:3000', 'http://127.0.0.1:3000'] #'http://localhost:5173', #2
 
 AUTH_USER_MODEL = "accounts.User" #specify custom user model
@@ -99,8 +98,10 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apis.middleware.ApiMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    
+    
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -146,7 +147,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "backend.wsgi.application"
 
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default backend
+]
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -211,6 +214,25 @@ CELERY_TIMEZONE = 'UTC'
 
 PASSWORD_RESET_TIMEOUT =  2 * 24 * 3600
 ACTIVATION_TOKEN_EXPIRE_HOURS = 48 * 3600
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
+
+
+
 try:
     from .local_settings import *
 except ImportError:

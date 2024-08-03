@@ -1,43 +1,14 @@
 from rest_framework import serializers
 from utils.serializers import FlexibleSerializer
-from .models import Course, Classroom, Lesson, Profile, Post, PostComment, Assignment
+from .models import (Course, Session, Lesson, Profile, Assignment,
+                    Program, Meeting, AssignmentSubmission, LessonAttendance, 
+                    Institution)
 
 class ProfileSerializer(FlexibleSerializer):
 
     class Meta:
         read_only_fields = ('created',)
         model = Profile
-        fields = '__all__'
-
-
-class CourseSerializer(FlexibleSerializer):
-    instructors = serializers.SerializerMethodField()
-
-    def get_instructors(self, obj):
-        return obj.instructors.values_list('user__email', flat=True)
-    class Meta:
-        read_only_fields = ('created',)
-        model = Course
-        fields = '__all__'
-
-
-class ClassroomSerializer(FlexibleSerializer):
-    class Meta:
-        read_only_fields = ('created',)
-        model = Classroom
-        fields = '__all__'
-
-
-class PostSerializer(FlexibleSerializer):
-    class Meta:
-        read_only_fields = ('created',)
-        model = Post
-        fields = '__all__'
-
-class PostCommentSerializer(FlexibleSerializer):
-    class Meta:
-        read_only_fields = ('created',)
-        model = PostComment
         fields = '__all__'
 
 class AssignmentSerializer(FlexibleSerializer):
@@ -47,10 +18,10 @@ class AssignmentSerializer(FlexibleSerializer):
         fields = '__all__'
 
 
-class ClassroomSerializer(FlexibleSerializer):
+class SessionSerializer(FlexibleSerializer):
     class Meta:
         read_only_fields = ('created',)
-        model = Classroom
+        model = Session
         fields = '__all__'
 
 class LessonSerializer(FlexibleSerializer):
@@ -59,22 +30,15 @@ class LessonSerializer(FlexibleSerializer):
         model = Lesson
         fields = '__all__'
 
-class CourseCodeSerializer(FlexibleSerializer):
-    class Meta:
-        model = Course
-        fields = ('code',)
-class ClassroomSerializer(FlexibleSerializer):
+class SessionSerializer(FlexibleSerializer):
     class Meta:
         read_only_fields = ('created',)
-        model = Classroom
+        model = Session
         fields = '__all__'
 
-class ClassroomDetailSerializer(FlexibleSerializer):
-    # courses = CourseCodeSerializer(many=True)
+class SessionDetailSerializer(FlexibleSerializer):
     courses = serializers.SerializerMethodField()
-    #instructors = serializers.SerializerMethodField()
     is_student = serializers.SerializerMethodField()
-    # is_instructor = serializers.SerializerMethodField()
     students_count = serializers.SerializerMethodField()
     def get_courses(self, obj):
         return list(obj.courses.values_list('title', flat=True))
@@ -98,5 +62,41 @@ class ClassroomDetailSerializer(FlexibleSerializer):
         return obj.students.count()
     class Meta:
         read_only_fields = ('created',)
-        model = Classroom
+        model = Session
+        fields = '__all__'
+
+class MeetingSerializer(FlexibleSerializer):
+    class Meta:
+        read_only_fields = ('created',)
+        model = Meeting
+        fields = '__all__'
+
+class ProgramSerializer(FlexibleSerializer):
+    class Meta:
+        read_only_fields = ('created',)
+        model = Program
+        fields = '__all__'
+
+class AssignmentSubmissionSerializer(FlexibleSerializer):
+    class Meta:
+        read_only_fields = ('created',)
+        model = AssignmentSubmission
+        fields = '__all__'
+
+class LessonAttendanceSerializer(FlexibleSerializer):
+    class Meta:
+        read_only_fields = ('created',)
+        model = LessonAttendance
+        fields = '__all__'
+
+class CourseSerializer(FlexibleSerializer):
+    class Meta:
+        read_only_fields = ('created',)
+        model = Course
+        fields = '__all__'
+
+class InstitutionSerializer(FlexibleSerializer):
+    class Meta:
+        read_only_fields = ('created',)
+        model = Institution
         fields = '__all__'

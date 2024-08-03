@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext_lazy as _
+from django.core.serializers.json import DjangoJSONEncoder
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -30,7 +32,27 @@ class User(AbstractUser):
     objects=CustomUserManager()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [] #['username', 'first_name'] #['username']
-
+    class GENDER(models.TextChoices):
+        MALE = 'Male', _('Male')
+        FEMALE = 'Female', _('Female')
+        NEUTRAL = 'Neutral', _('Neutral')
+        NON_BINARY = 'Non Binary', _('Non Binary')
+        OTHER = 'Other', _('Other')
+        NOT_SET = 'Not set', _('Not Set')
+    gender = models.CharField(max_length=12, default=GENDER.NOT_SET, choices=GENDER.choices)
+    status = models.CharField(max_length=32, null=True, blank=True)
+    institution = models.ForeignKey('apis.Institution', on_delete=models.CASCADE, blank=True, null=True)
+    image = models.URLField(null=True, blank=True)
+    google_tokens = models.JSONField(encoder=DjangoJSONEncoder, blank=True, null=True)
+    zoom_tokens = models.JSONField(encoder=DjangoJSONEncoder, blank=True, null=True)
+    class ROLES(models.TextChoices):
+        STUDENT = 'STUDENT', _('STUDENT')
+        INSTRUCTOR = 'INSTRUCTOR', _('INSTRUCTOR')
+        ADMIN = 'ADMIN', _('ADMIN')
+    #image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    role = models.CharField(
+        max_length=255, default=ROLES.STUDENT, choices=ROLES.choices
+    )
     def __str__(self):
         return str(self.email)
     

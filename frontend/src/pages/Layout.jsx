@@ -59,11 +59,11 @@ const Layout = ({ children }) => {
               className="me-2"
               aria-label="Search"
             />
-            <Button variant="outline-success">Search</Button>
+            {/* <Button variant="outline-success">Search</Button> */}
           </Form> </>}
           
           {user ? (
-             <NavDropdown title="Me" id="navbarScrollingDropdown">
+             <NavDropdown title={`${user.user.email.slice(0,4)}...`} id="navbarScrollingDropdown">
              <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
              <NavDropdown.Item href="/settings">
                Settings 

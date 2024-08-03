@@ -35,6 +35,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 import jwt
 from datetime import timedelta, datetime
 from django.conf import settings
+from google.auth.transport import requests
+from google.oauth2 import id_token
+from rest_framework import status
+from accounts.tokens import create_jwt_pair_for_user, decode_jwt_token, create_jwt_token
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"  # Only for local development
 
@@ -58,6 +62,7 @@ class OAuth2InitView(APIView):
     #     return redirect('http://localhost:3000')
     
     def post(self, request):
+        user = request.user
         authorization_url, state = flow.authorization_url(access_type='offline',include_granted_scopes='true')
 
         # request.session['state'] = state
@@ -75,21 +80,32 @@ class OAuth2InitView(APIView):
 class OAuth2CallbackView(APIView):
     permission_classes=[]
     def get(self, request):
-        flow.fetch_token(authorization_response=request.build_absolute_uri())
+        
         state = request.GET.get('state')
         code = request.GET.get('code')
         scope = request.GET.get('scope')
+        # try:
+        #     decoded_state = decode_jwt_token(state)
+        # except jwt.ExpiredSignatureError:
+        #     return Response({"error": "Expired state parameter"}, status=status.HTTP_400_BAD_REQUEST)
+        # except jwt.InvalidTokenError:
+        #     return Response({"error": "Invalid state parameter"}, status=status.HTTP_400_BAD_REQUEST)
+
+        flow.fetch_token(authorization_response=request.build_absolute_uri())
         #compare the state
         # if request.session['state'] != request.GET.get('state'):
         #     return Response({'error': 'State does not match!'}, status=400)
 
         #compare the state with JWT
         credentials = flow.credentials
-        user = request.user
+        # id_info = id_token.verify_oauth2_token(credentials.id_token, requests.Request(), YOUR_CLIENT_ID)
+        # app_jwt_token = create_jwt_token(id_info['sub']) 
+        #return Response({"token": app_jwt_token}, status=status.HTTP_200_OK)
         print(credentials)
         # Save the credentials to the database
         # user_token, created = UserToken.objects.get_or_create(user=user)
         # user_token.token = credentials.to_json()
         # user_token.save()
 
-        return Response({'message': 'OAuth 2.0 authentication successful!'})
+        return redirect('http://localhost:3000')
+        #return Response({"token": app_jwt_token})

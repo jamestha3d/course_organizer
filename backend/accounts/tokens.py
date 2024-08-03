@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.utils.http import base36_to_int, int_to_base36
 from django.utils.crypto import constant_time_compare
+import jwt
 
 TOKEN_VALIDITY_PERIOD = settings.ACTIVATION_TOKEN_EXPIRE_HOURS or 48 * 3600
 User = get_user_model()
@@ -44,3 +45,20 @@ login_token_generator = LoginTokenGenerator()
 # account_activation_token.make_token(user)
 #uid = force_str(urlsafe_base64_decode(uidb64)) #decode user. retrieve from verification link
 #urlsafe_base64_encode(force_bytes(user.pk)) #encode user. use this as part of verification link
+
+def decode_jwt_token(token):
+    return jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+
+def create_state_token(state):
+    payload = {
+        'state': state,
+        'exp': datetime.utcnow() + timedelta(minutes=10)  # State token expires in 10 minutes
+    }
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+
+def create_jwt_token(user_id):
+    payload = {
+        'user_id': user_id,
+        'exp': datetime.utcnow() + timedelta(hours=1)  # Token expires in 1 hour
+    }
+    return jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
