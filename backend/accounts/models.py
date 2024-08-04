@@ -25,12 +25,11 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email=email, password=password, **extra_fields)
 
 class User(AbstractUser):
-    email=models.CharField(max_length=80, unique=True) #models.EmailField() maybe?
-    username=models.CharField(max_length=45, null=True)
-    #date_of_birth=models.DateField(null=True) #don't need this.
+    # email=models.CharField(max_length=80)
+    email = models.EmailField(unique=False) #models.EmailField(unique=False) maybe?
+    username=models.CharField(max_length=45, null=True, unique=True)
     is_activated = models.BooleanField(default=False)
     objects=CustomUserManager()
-    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = [] #['username', 'first_name'] #['username']
     class GENDER(models.TextChoices):
         MALE = 'Male', _('Male')
@@ -39,6 +38,7 @@ class User(AbstractUser):
         NON_BINARY = 'Non Binary', _('Non Binary')
         OTHER = 'Other', _('Other')
         NOT_SET = 'Not set', _('Not Set')
+        # TODO add gender validator
     gender = models.CharField(max_length=12, default=GENDER.NOT_SET, choices=GENDER.choices)
     status = models.CharField(max_length=32, null=True, blank=True)
     institution = models.ForeignKey('apis.Institution', on_delete=models.CASCADE, blank=True, null=True)
@@ -49,10 +49,17 @@ class User(AbstractUser):
         STUDENT = 'STUDENT', _('STUDENT')
         INSTRUCTOR = 'INSTRUCTOR', _('INSTRUCTOR')
         ADMIN = 'ADMIN', _('ADMIN')
+        SUPER_ADMIN = 'SUPER_ADMIN', _('SUPER_ADMIN')
     #image = models.ImageField(default='default.jpg', upload_to='profile_pics')
     role = models.CharField(
         max_length=255, default=ROLES.STUDENT, choices=ROLES.choices
     )
+    class Meta:
+        unique_together = ('institution', 'email')
     def __str__(self):
         return str(self.email)
+    
+    def clean(self):
+        #TODO ensure that admin user has institution id
+        pass
     

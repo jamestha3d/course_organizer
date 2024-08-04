@@ -59,32 +59,33 @@ class CourseRegistration(GUIDModel):
 
 class LessonNote(GUIDModel):
     title = models.CharField(max_length= 20)
-    body = models.TextField()
+    body = models.TextField(null=True, blank=True)
     author = models.ForeignKey('Profile', on_delete=models.SET_NULL, null=True)
 
 
 class Institution(GUIDModel):
     name = models.CharField(max_length=256, blank=True, null=True, help_text="Name of Institution")
     brand_logo = models.ImageField(upload_to="institution_logos/", null=True, blank=True, help_text="Institution Logo")
-    namespace = AutoSlugField(populate_from='name', null=True, editable=True, always_update=False, help_text="institutions unique subdomain namespace")
-    description = models.TextField()
-    website = models.URLField()
+    slug = AutoSlugField(populate_from='name', null=True, editable=True, always_update=False, help_text="institutions unique subdomain namespace") # TODO Add validator to ensure that slug is unique
+    description = models.TextField(default='', null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    website = models.URLField(null=True, blank=True)
     
     class TYPE(models.TextChoices):
-        INDIVIDUAL = 'individual', _('Individual')
-        SCHOOL = 'school', _('School')
-        GOVT = 'government', _('Government')
+        INDIVIDUAL = 'individual', _('individual')
+        SCHOOL = 'school', _('school')
+        GOVT = 'government', _('government')
 
-    def type_validator(self, value):
-        if value not in self.TYPE.choices:
-            raise ValidationError(f'{value} is not a valid institution type. Choose from {", ".join([choice for choice in self.TYPE.values])}.')
+    def type_validator(value):
+        if value not in Institution.TYPE.values:
+            raise ValidationError(f'{value} is not a valid institution type. Choose from {", ".join([choice for choice in Institution.TYPE.values])}.')
     type = models.TextField(default=TYPE.INDIVIDUAL, choices=TYPE.choices, validators=[type_validator])
     country = models.CharField(max_length=255, blank=True, null=True)
-    default_language = models.CharField(max_length =255, blank=True, null=True)
-    
-    brand_primary_color = ColorField(default='#FF0000', help_text="Primary color")
-    brand_secondary_color = ColorField(default='#FFFF00', help_text="Secondary color for buttons")
-    brand_tertiary_color = ColorField(default='#FFFFFF', help_text="backup color")
+    default_language = models.CharField(max_length =255, blank=True, null=True, default='english')
+    currency = models.CharField(max_length=16, default='CAD', null=True, blank=True)
+    brand_primary_color = ColorField(default='#FF0000', help_text="Primary color", null=True, blank=True)
+    brand_secondary_color = ColorField(default='#FFFF00', help_text="Secondary color for buttons", null=True, blank=True)
+    brand_tertiary_color = ColorField(default='#FFFFFF', help_text="backup color", null=True, blank=True)
 
     
 
@@ -92,8 +93,8 @@ class Institution(GUIDModel):
 class Program(GUIDModel):
     title = models.CharField(max_length=255)
     slug = AutoSlugField(populate_from='title', null=True, editable=True, always_update=False, help_text="Program unique slug")
-    short_description = models.TextField()
-    long_description = models.TextField()
+    short_description = models.TextField(null=True, blank=True)
+    long_description = models.TextField(null=True, blank=True)
     cost = models.IntegerField()
     institution = models.ForeignKey(Institution, on_delete=models.SET_NULL, null=True, blank=True)
     public = models.BooleanField(default=True)
@@ -110,7 +111,7 @@ class Session(GUIDModel):
     institution = models.ForeignKey(Institution, null=True, blank=True, on_delete=models.SET_NULL)
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
-    application_deadline = models.DateTimeField(null=True, blank=True)
+    deadline = models.DateTimeField(null=True, blank=True)
     maximum_students = models.PositiveIntegerField(null=True, blank=True)
     is_open = models.BooleanField(default=True) #This should be a dynamic property calculated on whether application deadline has passed? or start date
     description = models.TextField(null=True, blank=True)
@@ -120,7 +121,7 @@ class StudentEnrollment(GUIDModel):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='enrollments')
     program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='student_enrollments')
-    payment_info = models.CharField(default='Trial')
+    payment_info = models.CharField(max_length=16, default='Trial')
 
     class Meta:
         unique_together = ('student', 'session')
@@ -141,11 +142,11 @@ class InstructorEnrollment(GUIDModel):
         unique_together = ('instructor', 'session')
         ordering = ['-created']
 class Lesson(GUIDModel):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, null=True, blank=True, default='Lesson')
     index = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     program = models.ForeignKey(Program, on_delete=models.CASCADE, related_name='lessons')
     instructor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='lessons')
-
+    
 class LessonAttendance(GUIDModel):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -162,7 +163,7 @@ class Assignment(GUIDModel):
     description = models.TextField(null=True, blank=True)
     attachment = models.URLField(null=True, blank=True)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
-    max_score = models.PositiveIntegerField(default=100, validators=[MaxValueValidator(100)])
+    max_score = models.PositiveIntegerField(default=100) # TODO validators=[MaxValueValidator(100)] dynamically set by institution
 
     def __str__(self):
         return self.title
@@ -172,7 +173,7 @@ class Assignment(GUIDModel):
 class AssignmentSubmission(GUIDModel):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     assignment = models.ForeignKey(Assignment, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now_add=True)
+    # date = models.DateTimeField(auto_now_add=True)
     attachment = models.URLField(null=True, blank=True)
     body = models.TextField(null=True, blank=True)
     score = models.PositiveIntegerField(null=True, blank=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
@@ -186,11 +187,11 @@ class AssignmentSubmission(GUIDModel):
 
     class Meta:
         unique_together = ('student', 'assignment')
-        ordering = ['-date']
+        ordering = ['-created']
 class Meeting(GUIDModel):
     title = models.CharField(max_length=255)
     lesson = models.ForeignKey(Lesson, on_delete=models.SET_NULL, related_name='meetings', null=True, blank=True)
-    description = models.TextField(null=True)
+    description = models.TextField(null=True, blank=True)
     start_time = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField(null=True, blank=True)
     meeting_link = models.URLField(validators=[URLValidator()])

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import SignUpSerializer
+from .serializers import SignUpSerializer, InstitutionSignupSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -17,11 +17,12 @@ from django.core.mail import send_mail, EmailMessage
 from emails.utils import welcome_email
 from django.contrib.auth import login
 from django.shortcuts import redirect
+from apis.models import Institution
 # Create your views here.
 
 
 User = get_user_model()
-class SignUpView(generics.GenericAPIView):
+class UserSignUpView(generics.GenericAPIView):
     serializer_class = SignUpSerializer
     permission_classes = []
     def post(self, request:Request):
@@ -47,7 +48,7 @@ class SignUpView(generics.GenericAPIView):
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class LoginView(APIView):
+class UserLoginView(APIView):
     permission_classes = []
     def post(self,request:Request):
         email = request.data.get("email")
@@ -175,3 +176,35 @@ class SingleSignOnView(APIView):
         else:
             return Response(data={"errors": "Single Sign On link is invalid or expired!"}, status=status.HTTP_400_BAD_REQUEST)
         
+class InstitutionSignUpView(APIView):
+    # TODO institution signup
+    serializer_class = InstitutionSignupSerializer
+    permission_classes = []
+    def post(self, request:Request):
+        
+        data = request.data
+        print(data)
+        serializer=self.serializer_class(data=data)
+
+        if serializer.is_valid():
+            institution, user = serializer.save()
+
+            # tokens = MyTokenObtainPairSerializer.get_token(user) ###
+            # TODO dynamically change content of token hash
+            tokens=create_jwt_pair_for_user(user)
+            response={
+                "message": "User Created Successfully",
+                "token": tokens,
+                #"data": serializer.data
+                # "user": user.email,
+                "user": {
+                    "email": user.email,
+                    "activated": user.is_activated
+                },
+                "institution": institution.guid
+            }
+            # welcome_email(user)
+            return Response(data=response, status=status.HTTP_201_CREATED)
+
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    

@@ -57,7 +57,11 @@ class ProfileView(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     filter_fields = '__all__'
     lookup_field = 'guid'
-
+    
+    # @action(permissoin)
+    # def change_colors(self, request):
+    #     return
+    
     
 class LessonView(viewsets.ModelViewSet):
     permission_classes = []
