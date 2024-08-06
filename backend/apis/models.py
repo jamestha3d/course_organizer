@@ -87,7 +87,9 @@ class Institution(GUIDModel):
     brand_secondary_color = ColorField(default='#FFFF00', help_text="Secondary color for buttons", null=True, blank=True)
     brand_tertiary_color = ColorField(default='#FFFFFF', help_text="backup color", null=True, blank=True)
 
-    
+    # class Meta:
+    #     unique_together = ('student', 'session')
+    #     ordering = ['-created']
 
 
 class Program(GUIDModel):

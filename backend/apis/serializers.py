@@ -2,7 +2,7 @@ from rest_framework import serializers
 from utils.serializers import FlexibleSerializer
 from .models import (Course, Session, Lesson, Profile, Assignment,
                     Program, Meeting, AssignmentSubmission, LessonAttendance, 
-                    Institution)
+                    Institution, InstructorEnrollment, StudentEnrollment)
 
 class ProfileSerializer(FlexibleSerializer):
 
@@ -99,4 +99,17 @@ class InstitutionSerializer(FlexibleSerializer):
     class Meta:
         read_only_fields = ('created',)
         model = Institution
+        fields = '__all__'
+
+
+class InstructorEnrollmentSerializer(FlexibleSerializer):
+    class Meta:
+        read_only_fields = ('created',)
+        model = InstructorEnrollment
+        fields = '__all__'
+
+class StudentEnrollmentSerializer(FlexibleSerializer):
+    class Meta:
+        read_only_fields = ('created',)
+        model = StudentEnrollment
         fields = '__all__'

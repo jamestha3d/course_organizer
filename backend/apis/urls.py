@@ -20,6 +20,10 @@ router.register(r'institutions',
                 views.InstitutionView, 'institutions')
 router.register(r'sessions',
                 views.SessionView, 'sessions')
+router.register(r'student_enrollment',
+                views.StudentEnrollmentView, 'student_enrollment')
+router.register(r'instructor_enrollment',
+                views.InstructorEnrollmentView, 'instructor_enrollment')
 
 urlpatterns = [
     path('', include(router.urls)),

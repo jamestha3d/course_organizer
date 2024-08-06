@@ -183,7 +183,6 @@ class InstitutionSignUpView(APIView):
     def post(self, request:Request):
         
         data = request.data
-        print(data)
         serializer=self.serializer_class(data=data)
 
         if serializer.is_valid():
@@ -191,17 +190,24 @@ class InstitutionSignUpView(APIView):
 
             # tokens = MyTokenObtainPairSerializer.get_token(user) ###
             # TODO dynamically change content of token hash
-            tokens=create_jwt_pair_for_user(user)
+            # tokens=create_jwt_pair_for_user(user)
+            from .serializers import MyTokenObtainPairSerializer
+            tokens = MyTokenObtainPairSerializer().get_token(user)
+            print(tokens)
+            print(tokens.access_token)
+            # access_token
+            
             response={
                 "message": "User Created Successfully",
-                "token": tokens,
+                "tokens": {"refresh": str(tokens), "access": str(tokens.access_token)},
+
                 #"data": serializer.data
                 # "user": user.email,
                 "user": {
                     "email": user.email,
                     "activated": user.is_activated
                 },
-                "institution": institution.guid
+                "institution": {"guid": institution.guid, "name": institution.name, "type": institution.type}
             }
             # welcome_email(user)
             return Response(data=response, status=status.HTTP_201_CREATED)

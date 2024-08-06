@@ -14,7 +14,7 @@ from .models import (
 from rest_framework import status, viewsets
 from .serializers import (SessionSerializer, SessionDetailSerializer, CourseSerializer, LessonSerializer, ProfileSerializer, 
                         AssignmentSerializer, AssignmentSubmissionSerializer, MeetingSerializer, InstitutionSerializer,
-                        ProgramSerializer)
+                        ProgramSerializer, InstructorEnrollmentSerializer, StudentEnrollmentSerializer)
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 
@@ -162,5 +162,19 @@ class CourseView(viewsets.ModelViewSet):
     permission_classes = []
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
+    filter_fields = '__all__'
+    lookup_field = 'guid'
+
+class StudentEnrollmentView(viewsets.ModelViewSet):
+    permission_classes = []
+    serializer_class = StudentEnrollmentSerializer
+    queryset = StudentEnrollment.objects.all()
+    filter_fields = '__all__'
+    lookup_field = 'guid'
+
+class InstructorEnrollmentView(viewsets.ModelViewSet):
+    permission_classes = []
+    serializer_class = InstructorEnrollmentSerializer
+    queryset = InstructorEnrollment.objects.all()
     filter_fields = '__all__'
     lookup_field = 'guid'
