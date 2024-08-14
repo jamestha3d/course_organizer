@@ -46,10 +46,10 @@ GOOGLE_OAUTH2_CLIENT_SECRETS_FILE = 'apis/client_secret_o_auth.json'
 GOOGLE_OAUTH2_SCOPES = ['https://www.googleapis.com/auth/calendar.events']
 GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:8000/oauth2callback'
 
-flow = Flow.from_client_secrets_file(
-    GOOGLE_OAUTH2_CLIENT_SECRETS_FILE, scopes=GOOGLE_OAUTH2_SCOPES,
-    redirect_uri=GOOGLE_OAUTH2_REDIRECT_URI
-)
+# flow = Flow.from_client_secrets_file(
+#     GOOGLE_OAUTH2_CLIENT_SECRETS_FILE, scopes=GOOGLE_OAUTH2_SCOPES,
+#     redirect_uri=GOOGLE_OAUTH2_REDIRECT_URI
+# )
 
 class OAuth2InitView(APIView):
     permission_classes = [IsAuthenticated]

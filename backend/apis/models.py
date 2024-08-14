@@ -97,10 +97,10 @@ class Program(GUIDModel):
     slug = AutoSlugField(populate_from='title', null=True, editable=True, always_update=False, help_text="Program unique slug")
     short_description = models.TextField(null=True, blank=True)
     long_description = models.TextField(null=True, blank=True)
-    cost = models.IntegerField()
+    cost = models.IntegerField(null=True, blank=True)
     institution = models.ForeignKey(Institution, on_delete=models.SET_NULL, null=True, blank=True)
     public = models.BooleanField(default=True)
-    image = models.ImageField(upload_to="programs/")
+    image = models.ImageField(upload_to="programs/", null=True, blank=True)
     duration = models.PositiveIntegerField(help_text="Estimated length of weeks to complete program.", null=True, blank =True)
 
 class Course(GUIDModel):

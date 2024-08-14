@@ -27,8 +27,8 @@ router.register(r'instructor_enrollment',
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('oauth2init/', OAuth2InitView.as_view(), name='oauth2init'),
-    path('oauth2callback/', OAuth2CallbackView.as_view(), name='oauth2callback'),
+    # path('oauth2init/', OAuth2InitView.as_view(), name='oauth2init'),
+    # path('oauth2callback/', OAuth2CallbackView.as_view(), name='oauth2callback'),
 
 ]
 
