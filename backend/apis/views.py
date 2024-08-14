@@ -17,9 +17,10 @@ from .serializers import (SessionSerializer, SessionDetailSerializer, CourseSeri
                         ProgramSerializer, InstructorEnrollmentSerializer, StudentEnrollmentSerializer)
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
-
+from drf_yasg.utils import swagger_auto_schema
 User = get_user_model()
 # Create your views here.
+
 
 @api_view(['GET'])
 def index(request:Request):
@@ -29,6 +30,10 @@ def index(request:Request):
     })
 
 @api_view(['GET'])
+@swagger_auto_schema(
+    operation_summary="Get Homepage",
+    operation_description="This returns homepage"
+)
 def homepage(request):
     response = {"message": "Hello World"}
     return Response(data=response, status=status.HTTP_200_OK )

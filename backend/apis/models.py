@@ -115,10 +115,14 @@ class Session(GUIDModel):
     end_date = models.DateTimeField(null=True, blank=True)
     deadline = models.DateTimeField(null=True, blank=True)
     maximum_students = models.PositiveIntegerField(null=True, blank=True)
-    is_open = models.BooleanField(default=True) #This should be a dynamic property calculated on whether application deadline has passed? or start date
+    # is_open = models.BooleanField(default=True) #This should be a dynamic property calculated on whether application deadline has passed? or start date
     description = models.TextField(null=True, blank=True)
 
-
+    @property
+    def is_open(self):
+        if self.deadline:
+            return now() < self.deadline
+        return True
 class StudentEnrollment(GUIDModel):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name='enrollments')

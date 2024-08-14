@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     "apis",
     "accounts",
     "emails",
+    "drf_yasg",
 ]
 
 FRONT_END_URL = 'http://localhost:3000'

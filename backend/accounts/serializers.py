@@ -62,12 +62,13 @@ class InstitutionSignupSerializer(serializers.ModelSerializer):
         type = validated_data.pop('type')
         institution = Institution.objects.create(name=name, type=type)
         user = User(
-            first_name = validated_data["first_name"],
-            last_name = validated_data["last_name"],
-            email = validated_data["email"],
+            first_name = validated_data.get("first_name"),
+            last_name = validated_data.get("last_name"),
+            email = validated_data.get("email"),
             institution = institution,
             role = User.ROLES.SUPER_ADMIN
         )
+
         user.set_password(validated_data['password'])
         user.save()
 

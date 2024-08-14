@@ -19,7 +19,9 @@ First we need to create a virtual environment and install the dependencies.
 
 ```cd backend``` 
 
-```python3 -m venv env``` ```<!-- Create the virtual environment. -->```
+```python3 -m venv env``` ```
+
+<!-- Create the virtual environment. -->```
 
 Activating the virtual enviroment depends on your OS:
 
@@ -50,3 +52,7 @@ Now we can run the server.
 
 ```python manage.py runserver```
 
+
+## API DOCUMENTATION:
+
+http://localhost:8000/api/documentation
