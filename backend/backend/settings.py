@@ -121,6 +121,15 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 100,
     "EXCEPTION_HANDLER": "utils.exceptions.custom_exception_handler"
 }
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
+}
 
 SIMPLE_JWT= {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=99),
