@@ -26,11 +26,12 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     # email=models.CharField(max_length=80)
-    email = models.EmailField(unique=False) #models.EmailField(unique=False) maybe?
+    email = models.EmailField(max_length=80, unique=True) #models.EmailField(unique=False) maybe?
     username=models.CharField(max_length=45, null=True, unique=True)
     is_activated = models.BooleanField(default=False)
     objects=CustomUserManager()
     REQUIRED_FIELDS = [] #['username', 'first_name'] #['username']
+    USERNAME_FIELD = "email"
     class GENDER(models.TextChoices):
         MALE = 'Male', _('Male')
         FEMALE = 'Female', _('Female')
