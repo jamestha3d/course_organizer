@@ -200,17 +200,21 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
+FRONTEND_APP = 'http://127.0.0.1:3000'
 
 # CELERY settings
 CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Example broker URL
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'UTC'
 
 PASSWORD_RESET_TIMEOUT =  2 * 24 * 3600
 ACTIVATION_TOKEN_EXPIRE_HOURS = 48 * 3600
+
+#celery -A backend worker
 try:
     from .local_settings import *
 except ImportError:

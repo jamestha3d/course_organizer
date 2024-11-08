@@ -14,9 +14,10 @@ from .tokens import account_activation_token, login_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, EmailMessage
-from emails.utils import welcome_email
+from emails.utils import welcome_email, send_welcome_email_async
 from django.contrib.auth import login
 from django.shortcuts import redirect
+from .tasks import send_user_email, send_welcome_email
 # Create your views here.
 
 
@@ -42,7 +43,8 @@ class SignUpView(generics.GenericAPIView):
                     "activated": user.is_activated
                 }
             }
-            welcome_email(user)
+            #welcome_email(user)
+            send_welcome_email_async(user)
             return Response(data=response, status=status.HTTP_201_CREATED)
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)

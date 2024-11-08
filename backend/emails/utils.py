@@ -10,6 +10,7 @@ from accounts.tokens import account_activation_token, login_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.urls import reverse
+from accounts.tasks import send_email_to_user
 
 def EmailReplace(template, key_dict:dict):
     key_list = list(key_dict.keys())
@@ -110,3 +111,16 @@ def send_login_link(user):
     subject = "Your Login Link"
     message = f"Hi {user.username},\n\nClick the link below to log in:\n\n{login_url}\n\nThis link will expire in 24 hours."
     send_mail(subject, None, settings.DEFAULT_FROM_EMAIL, [user.email], html_message=message)
+
+def send_welcome_email_async(user):
+    token = account_activation_token.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    mail_subject = "Activate Your user account."
+    activation_link = f"http://127.0.0.1:3000/activate/{uid}/{token}"
+    message = render_to_string("emails/template_welcome_user.html", {
+        "user": user.email,
+        "activation_link": activation_link
+    })
+    send_email_to_user.delay(
+        mail_subject, user.email, message
+    )
