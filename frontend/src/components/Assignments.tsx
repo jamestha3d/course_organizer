@@ -12,7 +12,7 @@ const Assignments: React.FunctionComponent<IAssignmentsProps> = (props) => {
 
     const user = UseAuthContext()
     const [loading, setLoading] = useState(true)
-    const [assignments, setAssignments] = useState([])
+    const [assignments, setAssignments] = useState<any[]>([])
     const fetchAssignments = async () => {
         const data = await getAssignments()
         console.log(data)

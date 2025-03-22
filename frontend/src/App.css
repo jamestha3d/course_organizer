@@ -65,3 +65,16 @@ main {
     margin: 30px;
     padding: 20px;
 }
+
+.required-asterisk {
+    color: #b03a2e; /* Set the color of the asterisk */
+    font-size: 1.2em; /* Adjust the size of the asterisk */
+    margin-left: 0.2em; /* Add some spacing between the label and the asterisk */
+}
+
+/* Style for the information message */
+.required-info {
+    font-size: 0.8em; /* Adjust font size if needed */
+    color: #888; /* Dark gray color for better readability */
+    margin-bottom: 1em; /* Space below the message */
+}

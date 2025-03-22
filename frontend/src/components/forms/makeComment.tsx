@@ -4,7 +4,7 @@ interface ImakeCommentProps {
 }
 
 const makeComment: React.FunctionComponent<ImakeCommentProps> = (props) => {
-    return ();
+    return (<></>);
 };
 
 export default makeComment;

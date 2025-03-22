@@ -11,7 +11,7 @@ const createSubmission: React.FunctionComponent<IcreateSubmissionProps> = (props
 
     })
 
-    const handleChange = (e: React.FormEvent) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
@@ -23,7 +23,7 @@ const createSubmission: React.FunctionComponent<IcreateSubmissionProps> = (props
 
     }
     return (
-        <form method={"POST"} onSumbit={createSubmission}>
+        <form method={"POST"} onSubmit={createSubmission}>
             <input name="title" value={formData.title} onChange={handleChange}></input>
             <input name="body" value={formData.title} onChange={handleChange}></input>
             <input name="attachments" value={formData.title} onChange={handleChange}></input>

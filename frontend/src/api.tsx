@@ -2,10 +2,12 @@ import axios from "axios"
 import { Lesson } from "./models/lesson.model";
 import { UseAuthContext } from "./hooks/useAuthContext";
 
-const endpoint = process.env.REACT_APP_API_URL;
+export const endpoint = process.env.REACT_APP_API_URL;
 const api = endpoint + 'api/';
+const auth = endpoint + 'auth/';
 const login = endpoint + 'auth/login/'
 const signup = endpoint + 'auth/signup/'
+
 
 interface LessonsResponse {
     data: Lesson[]
@@ -17,7 +19,8 @@ export interface Login_details {
 }
 
 function getUser() {
-    return JSON.parse(localStorage.getItem('user'))
+    const user = localStorage.getItem('user')
+    return user ? JSON.parse(user) : user
 }
 
 const getEndpoint = async (endpoint: string,) => {
@@ -159,4 +162,97 @@ export const getAssignments = async () => {
 
 export const postNewCourse = async (data: any) => {
     return await postEndpoint(api + 'courses/', data)
+}
+
+export const getApiEndPoint = async (endpoint:String) => {
+    return await getEndpoint(api + endpoint)
+}
+
+export const postApiEndPoint = async (endpoint:String, data:any) => {
+    return await postEndpoint(api + endpoint, data)
+}
+
+const getEndpointNoPagination = async (endpoint: string,) => {
+    const user = getUser()
+    try {
+        const data = await axios.get<any>(
+            `${endpoint}`,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + user.token.access
+                }
+            }
+        );
+
+        if ('results' in data.data){
+            return data.data.results;
+        }
+        else{
+            return data.data
+        }
+
+    }
+    catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log("error message: ", error.message);
+            return [];
+        } else {
+            console.log("unexpected error: ", error);
+            return [];
+        }
+    }
+}
+
+export const getApi= async (endpoint:String) => {
+    return await getEndpointNoPagination(api + endpoint)
+}
+
+export const postApi = async (path: string, body: any, params=null, user=false) => {
+    const loggedInUser = getUser()
+    try {
+        const data = await axios.post<any>(
+            `${endpoint + path}`,
+            body,
+            params ? params : {}
+        );
+
+        return data;
+
+    }
+    catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log("error message: ", error.message);
+            return error.response;
+        } else {
+            console.log("unexpected error: ", error);
+            return error.response;
+        }
+    }
+}
+
+export const postApiUser = async (path: string, body: any) => {
+    const loggedInUser = getUser()
+    try {
+        const data = await axios.post<any>(
+            `${endpoint + path}`,
+            body,
+            {
+                headers: {
+                    Authorization: 'Bearer ' + loggedInUser.token.access
+                }
+            }
+        );
+
+        return data;
+
+    }
+    catch (error) {
+        if (axios.isAxiosError(error)) {
+            console.log("error message: ", error.message);
+            return error.response;
+        } else {
+            console.log("unexpected error: ", error);
+            return error.response;
+        }
+    }
 }

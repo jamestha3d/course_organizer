@@ -1,0 +1,57 @@
+{% autoescape off %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Course Connect</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #000000;
+        }
+        .button {
+            display: inline-block;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .footer {
+            font-size: 12px;
+            color: #777;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Course Connect, {{user}}!</h1>
+        <p>Thank you for signing up. To complete your registration, please verify your email address by clicking the link below:</p>
+        <p><a href="{{activation_link}}" class="button">Verify Your Email</a></p>
+        <p>If you did not sign up for this account, please ignore this email.</p>
+        <div class="footer">
+            <p>&copy; 2024 Tangitex Technologies. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
+
+{% endautoescape %}

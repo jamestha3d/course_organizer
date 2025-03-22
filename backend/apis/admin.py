@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Course, Assignment, Classroom
+from .models import Course, Assignment
 from reversion.admin import VersionAdmin
 # Register your models here.
 
-admin.site.register(Classroom)
+
 admin.site.register(Assignment)
 admin.site.register(Course)
 

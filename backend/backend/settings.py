@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+# Add these at the top of your settings.py
+from os import getenv
+from dotenv import load_dotenv
+
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -66,8 +71,6 @@ ALLOWED_HOSTS = []
 #     'dnt',
 #     'origin',
 #     'user-agent',
-#     'Oto-Org',
-#     'Oto-Location',
 #     'x-csrftoken',
 #     'x-requested-with',
 # )
@@ -85,9 +88,12 @@ INSTALLED_APPS = [
     "corsheaders", #1
     "apis",
     "accounts",
+    "emails",
+    "drf_yasg",
 ]
 
-CORS_ALLOWED_ORIGINS = ['http://192.168.2.15:3000', 'http://localhost:3000'] #'http://localhost:5173', #2
+FRONT_END_URL = 'http://localhost:3000'
+CORS_ALLOWED_ORIGINS = ['http://192.168.2.15:3000', 'http://localhost:3000', 'http://127.0.0.1:3000'] #'http://localhost:5173', #2
 
 AUTH_USER_MODEL = "accounts.User" #specify custom user model
 MIDDLEWARE = [
@@ -98,8 +104,10 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apis.middleware.ApiMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    
+    
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -115,7 +123,17 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "PAGE_SIZE": 100 
+    "PAGE_SIZE": 100,
+    "EXCEPTION_HANDLER": "utils.exceptions.custom_exception_handler"
+}
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
 }
 
 SIMPLE_JWT= {
@@ -123,6 +141,7 @@ SIMPLE_JWT= {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
     'SIGNING_KEY': SECRET_KEY,
     'AUTH_HEADER_TYPES': ('Bearer',),
+    'TOKEN_OBTAIN_SERIALIZER': 'accounts.serializers.MyTokenObtainPairSerializer',
     
 
 }
@@ -144,15 +163,28 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "backend.wsgi.application"
 
-
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default backend
+]
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': getenv('PGDATABASE'),
+        'USER': getenv('PGUSER'),
+        'PASSWORD': getenv('PGPASSWORD'),
+        'HOST': getenv('PGHOST'),
+        'PORT': getenv('PGPORT', 5432),
+        'OPTIONS': {
+        'sslmode': 'require',
+        },
+    },
+    "test": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
-    }
+    },
 }
 
 
@@ -196,3 +228,40 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+
+# CELERY settings
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Example broker URL
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+PASSWORD_RESET_TIMEOUT =  2 * 24 * 3600
+ACTIVATION_TOKEN_EXPIRE_HOURS = 48 * 3600
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
+
+# Replace the DATABASES section of your settings.py with this
+
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
